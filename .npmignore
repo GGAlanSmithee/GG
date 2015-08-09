@@ -3,4 +3,5 @@
 build
 .gitignore
 .jshintrc
+test
 test.js

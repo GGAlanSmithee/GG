@@ -28,7 +28,8 @@
   ],
   "dependencies": {
     "gg-entities": "^1.0.1",
-    "mainloop.js": "^1.0.0"
+    "mainloop.js": "^1.0.0",
+    "three": "^0.71.0"
   },
   "devDependencies": {
     "babel": "^5.8.21",

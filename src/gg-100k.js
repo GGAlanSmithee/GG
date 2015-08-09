@@ -1,20 +1,19 @@
-import Game     from './core/game';
-import MainLoop from 'mainloop.js';
+import Game          from './core/game';
+import MainLoop      from 'mainloop.js';
+import IRenderer     from './core/renderer/i-renderer';
+import DebugRenderer from './core/renderer/debug-renderer';
+import ThreeRenderer from './core/renderer/three-renderer';
 
 class App {
-    constructor() {
-        this.game = new Game();
+    constructor(game) {
+        this.game = game;
     }
     
     update(delta) {
-        console.log('...updating');
-        
         this.game.update(delta);
     }
     
     draw(interpolationPercentage) {
-        console.log('...drawing');
-        
         this.game.draw(interpolationPercentage);
     }
     
@@ -25,4 +24,4 @@ class App {
     }
 }
 
-export { App };
+export { App, Game, IRenderer, DebugRenderer, ThreeRenderer };

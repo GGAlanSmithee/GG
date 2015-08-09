@@ -1,15 +1,17 @@
-var Entities = require('gg-entities');
+import Entities from 'gg-entities';
 
 export default class Game {
-    constructor() {
+    constructor(renderer) {
+        this.renderer = renderer;
+        
         this.entityManager = new Entities.EntityManager(200);
     }
     
     update(delta) {
-        this.entityManager.onLogic(delta);
+        this.renderer.update(delta);
     }
     
     draw(interpolationPercentage) {
-        this.entityManager.onRender(interpolationPercentage);
+        this.renderer.draw(interpolationPercentage);
     }
 }
