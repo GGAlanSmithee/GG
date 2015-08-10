@@ -1,6 +1,6 @@
 import Interface     from './../utility/interface';
 import DebugRenderer from './debug-renderer';
-import ThreeRenderer from './renderer-3d';
+import ThreeRenderer from './three-renderer';
 
 export default class IRenderer extends Interface {
     constructor() {

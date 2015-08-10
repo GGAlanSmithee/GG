@@ -1,15 +1,15 @@
 import MainLoop from 'mainloop.js';
 
-import Game                    from './core/game';
-import Level                   from './core/level/level';
-import IRenderer               from './core/renderer/i-renderer';
-import DebugRenderer           from './core/renderer/debug-renderer';
-import Renderer3D              from './core/renderer/renderer-3d';
-import IResourceManager        from './core/resource_manager/i-resource-manager';
-import GraphicsResourceManager from './core/resource_manager/graphics-resource-manager';
+import Game             from './core/game';
+import Level            from './core/level/level';
+import IRenderer        from './core/renderer/i-renderer';
+import DebugRenderer    from './core/renderer/debug-renderer';
+import ThreeRenderer    from './core/renderer/three-renderer';
+import IResourceManager from './core/loader/i-loader';
+import ThreeJSONLoader  from './core/loader/three-json-loader';
 
 class App {
-    constructor(game = new Game(new Renderer3D())) {
+    constructor(game = new Game(new ThreeRenderer())) {
         this.game = game;
     }
     
@@ -28,4 +28,11 @@ class App {
     }
 }
 
-export { App, Game, Level, IRenderer, DebugRenderer, Renderer3D, IResourceManager, GraphicsResourceManager };
+export { App,
+         Game,
+         Level,
+         IRenderer,
+         DebugRenderer,
+         ThreeRenderer,
+         IResourceManager,
+         ThreeJSONLoader };

@@ -1,7 +1,8 @@
-import IRenderer from './i-renderer';
-import THREE     from 'three';
+import THREE from 'three';
 
-export default class Renderer3D extends IRenderer {
+import IRenderer from './i-renderer';
+
+export default class ThreeRenderer extends IRenderer {
     constructor() {
         super();
 
