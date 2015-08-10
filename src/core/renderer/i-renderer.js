@@ -1,13 +1,10 @@
-import interfaceInstantiationCheck  from './../utility/interface-instantiation-check';
-import interfaceImplementationCheck from './../utility/interface-implementation-check';
-
+import Interface     from './../utility/interface';
 import DebugRenderer from './debug-renderer';
 import ThreeRenderer from './three-renderer';
 
-export default class IRenderer {
+export default class IRenderer extends Interface {
     constructor() {
-        interfaceInstantiationCheck(IRenderer, this, [DebugRenderer, ThreeRenderer]);
-        interfaceImplementationCheck(IRenderer, this);
+        super(IRenderer, [DebugRenderer, ThreeRenderer]);
     }
     
     update(delta) {
