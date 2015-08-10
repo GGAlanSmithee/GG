@@ -5,7 +5,7 @@ import DebugRenderer from './core/renderer/debug-renderer';
 import ThreeRenderer from './core/renderer/three-renderer';
 
 class App {
-    constructor(game) {
+    constructor(game = new Game(new ThreeRenderer())) {
         this.game = game;
     }
     

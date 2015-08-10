@@ -30,15 +30,11 @@ export default class ThreeRenderer extends IRenderer {
     }
     
     update(delta) {
-        this.entityManager.onLogic(delta);
-        
         this.cube.rotation.x += 0.1;
         this.cube.rotation.y += 0.1;
     }
     
     draw(interpolationPercentage) {
-        this.entityManager.onRender(interpolationPercentage);
-        
         this.renderer.render(this.scene, this.camera);
     }
 }
