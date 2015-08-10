@@ -1,12 +1,13 @@
 import IRenderer from './i-renderer';
 import THREE     from 'three';
 
-export default class ThreeRenderer extends IRenderer {
+export default class Renderer3D extends IRenderer {
     constructor() {
         super();
 
+        // todo: check with three for compatability
         if (typeof window === 'undefined') {
-            throw Error('ThreeRenderer can only be used in a browser environment.');
+            throw Error('the WebGLRenderer can only be used in a browser environment.');
         }
 
         this.scene  = new THREE.Scene();
