@@ -1,4 +1,5 @@
 import IRenderer from './i-renderer';
+import THREE from 'three';
 
 export default class ThreeRenderer extends IRenderer {
     constructor() {
@@ -7,13 +8,7 @@ export default class ThreeRenderer extends IRenderer {
         if (typeof window === 'undefined') {
             throw Error('ThreeRenderer can only be used in a browser environment.');
         }
-        
-        var THREE = window.THREE;
-        
-        if (!THREE) {
-            throw Error('ThreeRenderer requires three.js, include it first.');
-        }
-        
+
         this.scene  = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         
