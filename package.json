@@ -8,14 +8,14 @@
     "email": "ggnore.alan.smithee@gmail.com"
   },
   "scripts": {
-    "clean": "./node_modules/.bin/rimraf ./dist/*",
-    "babelify": "browserify -t babelify ./dist/bundle.js --s GG100k > ./dist/gg-100k.js -d",
+    "clean": "rimraf dist/*",
+    "babelify": "browserify -t babelify dist/bundle.js --s GG100k > dist/gg-100k.js -d",
     "bundle": "esperanto --type=cjs -o dist/bundle.js -b -s -i src/gg-100k.js",
-    "jshint": "jshint ./src/core",
-    "uglify": "./node_modules/.bin/uglifyjs ./dist/gg-100k.js -o ./dist/gg-100k.min.js -c -m",
+    "jshint": "jshint src/core",
+    "uglify": "uglifyjs dist/gg-100k.js -o dist/gg-100k.min.js -c -m",
     "prebuild": "npm run jshint && npm run clean && npm run bundle",
     "build": "npm run babelify",
-    "postbuild": "npm run uglify && ./node_modules/.bin/rimraf ./dist/bundle.js"
+    "postbuild": "rimraf dist/bundle.js"
   },
   "repository": {
     "type": "git",
