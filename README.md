@@ -2,4 +2,4 @@
 
 RTS in the browser.
 
-## [Wiki](../Wiki/Home)
+## [Wiki](https://bitbucket.org/ggalansmithee/100k/wiki/Home)
