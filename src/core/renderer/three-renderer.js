@@ -4,7 +4,7 @@ import IRenderer from './i-renderer';
 
 export default class ThreeRenderer extends IRenderer {
     constructor() {
-        super();
+        super(ThreeRenderer);
 
         // todo: check with three for compatability
         if (typeof window === 'undefined') {
@@ -12,7 +12,11 @@ export default class ThreeRenderer extends IRenderer {
         }
 
         this.scene  = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        
+        this.camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
+		this.camera.position.x = -10;
+		this.camera.position.y = 14;
+		this.camera.position.z = 10;
         
         this.renderer = new THREE.WebGLRenderer();
         this.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -31,7 +35,10 @@ export default class ThreeRenderer extends IRenderer {
         this.cube.rotation.y += 0.1;
     }
     
-    draw(interpolationPercentage) {
-        this.renderer.render(this.scene, this.camera);
+    draw(interpolationPercentage, scene) {
+        this.camera.lookAt(scene.position);
+		this.camera.updateMatrixWorld();
+		
+        this.renderer.render(scene, this.camera);
     }
 }

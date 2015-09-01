@@ -1,15 +1,13 @@
-import Interface     from './../utility/interface';
-import DebugRenderer from './debug-renderer';
-import ThreeRenderer from './three-renderer';
+import Interface from './../../utility/interface';
 
 export default class IRenderer extends Interface {
-    constructor() {
-        super(IRenderer, [DebugRenderer, ThreeRenderer]);
+    constructor(derrivedClass) {
+        super(IRenderer, derrivedClass);
     }
     
     update(delta) {
     }
     
-    draw(interpolationPercentage) {
+    draw(interpolationPercentage, scene) {
     }
 }
