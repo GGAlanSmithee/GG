@@ -1,21 +1,19 @@
-import { EntityManager } from 'gg-entities';
+/* @flow */
 
 export default class Game {
-    constructor(renderer) {
-        this.renderer      = renderer;
-        this.level         = null;
-        this.entityManager = new EntityManager(200);
+    entityManager   : IEntityManager;
+    rendererManager : IRendererManager;
+    
+    constructor(entityManager : IEntityManager, rendererManager : IRendererManager) {
+        this.entityManager   = entityManager;
+        this.rendererManager = rendererManager;
     }
     
-    setLevel(level) {
-        this.level = level;
+    update(delta : number) : void {
+        this.entityManager.onLogic(delta);
     }
     
-    update(delta) {
-        this.renderer.update(delta);
-    }
-    
-    draw(interpolationPercentage) {
-        this.renderer.draw(interpolationPercentage, this.level.scene);
+    render(interpolationPercentage : number) : void {
+        this.rendererManager.render(interpolationPercentage);
     }
 }

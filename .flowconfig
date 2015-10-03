@@ -1,0 +1,15 @@
+[ignore]
+.*/prebuild/.*
+.*/build/.*
+.*/dist/.*
+.*/.c9/.*
+.*/node_modules/.*
+.*/old_src/.*
+
+[include]
+.*/src/.*
+
+[libs]
+lib/
+
+[options]
