@@ -10,6 +10,8 @@ import ThreeRendererManager from './external/three-renderer-manager';
 window.onload = function() {
     let game = new Game(new EntityManager(), new ThreeRendererManager());
 
+    console.log(EntityManager);
+    
     MainLoop.setUpdate(delta => { game.update(delta); })
             .setDraw(interpolationPercentage => { game.render(interpolationPercentage); })
             .start();

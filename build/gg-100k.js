@@ -3,33 +3,6 @@
     MainLoop = 'default' in MainLoop ? MainLoop['default'] : MainLoop;
     three = 'default' in three ? three['default'] : three;
 
-    class ThreeRendererManager {
-        constructor() {
-            this.renderer     = new three.WebGLRenderer();
-            this.currentScene = new three.Scene();
-            this.camera       = new three.PerspectiveCamera();
-            
-            this.renderer.setSize(window.innerWidth, window.innerHeight);
-            
-            document.body.appendChild(this.renderer.domElement);
-            
-            let geometry = new three.BoxGeometry(1, 1, 1);
-            let material = new three.MeshBasicMaterial({ color: 0x00ff00 });
-            this.cube     = new three.Mesh(geometry, material);
-            
-            this.currentScene.add(this.cube);
-            
-            this.camera.position.z = 5;
-        }
-
-        render(interpolationPercentage) {
-            this.cube.rotation.x += 0.1;
-            this.cube.rotation.y += 0.1;
-
-            this.renderer.render(this.currentScene, this.camera);
-        }
-    }
-
     const SystemType = {
         Logic   : 0,
         Render  : 1
@@ -555,6 +528,33 @@
         }
     }
 
+    class ThreeRendererManager {
+        constructor() {
+            this.renderer     = new three.WebGLRenderer();
+            this.currentScene = new three.Scene();
+            this.camera       = new three.PerspectiveCamera();
+            
+            this.renderer.setSize(window.innerWidth, window.innerHeight);
+            
+            document.body.appendChild(this.renderer.domElement);
+            
+            let geometry = new three.BoxGeometry(1, 1, 1);
+            let material = new three.MeshBasicMaterial({ color: 0x00ff00 });
+            this.cube     = new three.Mesh(geometry, material);
+            
+            this.currentScene.add(this.cube);
+            
+            this.camera.position.z = 5;
+        }
+
+        render(interpolationPercentage) {
+            this.cube.rotation.x += 0.1;
+            this.cube.rotation.y += 0.1;
+
+            this.renderer.render(this.currentScene, this.camera);
+        }
+    }
+
     /* @flow */
 
     class Game {
@@ -575,6 +575,8 @@
     window.onload = function() {
         let game = new Game(new EntityManager(), new ThreeRendererManager());
 
+        console.log(EntityManager);
+        
         MainLoop.setUpdate(delta => { game.update(delta); })
                 .setDraw(interpolationPercentage => { game.render(interpolationPercentage); })
                 .start();
