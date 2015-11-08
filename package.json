@@ -8,13 +8,8 @@
     "email": "ggnore.alan.smithee@gmail.com"
   },
   "scripts": {
-    "babel": "babel build/gg-100k.js > dist/gg-100k.js -s inline",
-    "bundle": "rollup -f iife -n GG100k -i build/src/gg-100k.js -e qwest,mainloop.js -g three:THREE -o build/gg-100k.js",
-    "clean": "./node_modules/.bin/rimraf ./build/* ./dist/*",
-    "typestrip": "flow-typestrip -o build src/*.js src/**/*.js src/**/*.js",
-    "uglify": "uglifyjs ./dist/gg-100k.js -o ./dist/gg-100k.min.js -c -m",
-    "prebuild": "npm run clean && npm run typestrip && npm run bundle",
-    "build": "npm run babel"
+    "prebuild": "mkdir dist -p",
+    "build": "browserify src/gg-100k.js -t [ babelify --presets [ es2015 ] --plugins [ transform-flow-strip-types ] ] -o dist/gg-100k.js"
   },
   "repository": {
     "type": "git",
@@ -26,21 +21,21 @@
     "js"
   ],
   "dependencies": {
-    "gg-entities": "^1.0.1",
+    "gg-entities": "^1.0.4",
     "mainloop.js": "^1.0.0",
     "patroljs": "^0.1.0",
     "qwest": "^2.0.7",
-    "three": "^0.72.0",
-    "underscore": "^1.8.3"
+    "three": "^0.72.0"
   },
   "devDependencies": {
-    "babel": "^5.8.21",
-    "babel-eslint": "^4.0.5",
-    "eslint": "^1.3.1",
-    "flow-bin": "^0.16.0",
-    "flow-typestrip": "^0.1.3",
-    "gg-entities": "^1.0.2",
-    "three": "^0.72.0",
-    "uglifyjs": "^2.4.10"
+    "babel-cli": "^6.1.2",
+    "babel-plugin-syntax-flow": "^6.0.14",
+    "babel-plugin-transform-class-properties": "^6.0.14",
+    "babel-plugin-transform-flow-strip-types": "^6.0.14",
+    "babel-polyfill": "^6.0.16",
+    "babel-preset-es2015": "^6.1.2",
+    "babelify": "^7.2.0",
+    "browserify": "^12.0.1",
+    "flow-bin": "^0.18.1"
   }
 }
