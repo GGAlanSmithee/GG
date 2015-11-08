@@ -22,15 +22,11 @@
   ],
   "dependencies": {
     "gg-entities": "^1.0.4",
-    "mainloop.js": "^1.0.0",
-    "patroljs": "^0.1.0",
-    "qwest": "^2.0.7",
-    "three": "^0.72.0"
+    "mainloop.js": "^1.0.1",
+    "qwest": "^2.2.2",
+    "three": "^0.73.0"
   },
   "devDependencies": {
-    "babel-cli": "^6.1.2",
-    "babel-plugin-syntax-flow": "^6.0.14",
-    "babel-plugin-transform-class-properties": "^6.0.14",
     "babel-plugin-transform-flow-strip-types": "^6.0.14",
     "babel-polyfill": "^6.0.16",
     "babel-preset-es2015": "^6.1.2",
