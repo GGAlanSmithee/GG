@@ -15,10 +15,6 @@ import AjaxLoader             from './external/qwest-ajax-loader';
 import MeshLoader             from './external/three-json-mesh-loader';
 import ThreeScene             from './external/model/three-scene';
 
-function test(scene : ThreeScene) : void {
-    
-}
-
 test(new ThreeScene());
 
 window.onload = function() {
