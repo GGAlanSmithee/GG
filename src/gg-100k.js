@@ -1,13 +1,12 @@
 /* @flow */
 
-import MainLoop          from 'mainloop.js';
-import { EntityManager } from 'gg-entities';
+import MainLoop from 'mainloop.js';
 
 import Game from './core/game';
 import DI   from './utility/dependency-injector';
 
 window.onload = async function() {
-    let game = new Game(new EntityManager(), DI.rendererManager());
+    let game = new Game(DI.entityManager(), DI.rendererManager());
     
     let levelLoader = DI.levelLoader();
     

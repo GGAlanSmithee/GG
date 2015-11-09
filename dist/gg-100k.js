@@ -37866,8 +37866,6 @@ var _mainloop = require('mainloop.js');
 
 var _mainloop2 = _interopRequireDefault(_mainloop);
 
-var _ggEntities = require('gg-entities');
-
 var _game = require('./core/game');
 
 var _game2 = _interopRequireDefault(_game);
@@ -37885,7 +37883,7 @@ window.onload = _asyncToGenerator(regeneratorRuntime.mark(function _callee() {
     return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
             case 0:
-                game = new _game2.default(new _ggEntities.EntityManager(), _dependencyInjector2.default.rendererManager());
+                game = new _game2.default(_dependencyInjector2.default.entityManager(), _dependencyInjector2.default.rendererManager());
                 levelLoader = _dependencyInjector2.default.levelLoader();
                 _context.next = 4;
                 return levelLoader.loadLevel('levels/level-one.json');
@@ -37908,7 +37906,7 @@ window.onload = _asyncToGenerator(regeneratorRuntime.mark(function _callee() {
     }, _callee, this);
 }));
 
-},{"./core/game":8,"./utility/dependency-injector":13,"gg-entities":1,"mainloop.js":3}],10:[function(require,module,exports){
+},{"./core/game":8,"./utility/dependency-injector":13,"mainloop.js":3}],10:[function(require,module,exports){
 "use strict";
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -38065,6 +38063,8 @@ var _levelLoader = require('./../logic/level-loader');
 
 var _levelLoader2 = _interopRequireDefault(_levelLoader);
 
+var _ggEntities = require('gg-entities');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
@@ -38073,7 +38073,10 @@ exports.default = {
     },
     levelLoader: function levelLoader() {
         return new _levelLoader2.default(new _qwestAjaxLoader2.default());
+    },
+    entityManager: function entityManager() {
+        return new _ggEntities.EntityManager();
     }
 };
 
-},{"./../logic/level-loader":10,"./../logic/qwest-ajax-loader":11,"./../logic/three-renderer-manager":12}]},{},[9]);
+},{"./../logic/level-loader":10,"./../logic/qwest-ajax-loader":11,"./../logic/three-renderer-manager":12,"gg-entities":1}]},{},[9]);
