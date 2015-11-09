@@ -37862,10 +37862,6 @@ exports.default = Game;
 },{}],9:[function(require,module,exports){
 'use strict';
 
-var _mainloop = require('mainloop.js');
-
-var _mainloop2 = _interopRequireDefault(_mainloop);
-
 var _game = require('./core/game');
 
 var _game2 = _interopRequireDefault(_game);
@@ -37879,7 +37875,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { var callNext = step.bind(null, "next"); var callThrow = step.bind(null, "throw"); function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(callNext, callThrow); } } callNext(); }); }; }
 
 window.onload = _asyncToGenerator(regeneratorRuntime.mark(function _callee() {
-    var game, levelLoader, level;
+    var game, levelLoader, level, loopManager;
     return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
             case 0:
@@ -37893,20 +37889,22 @@ window.onload = _asyncToGenerator(regeneratorRuntime.mark(function _callee() {
 
                 console.log(level);
 
-                _mainloop2.default.setUpdate(function (delta) {
+                loopManager = _dependencyInjector2.default.loopManager();
+
+                loopManager.setUpdate(function (delta) {
                     game.update(delta);
-                }).setDraw(function (interpolationPercentage) {
+                }).setRender(function (interpolationPercentage) {
                     game.render(interpolationPercentage);
                 }).start();
 
-            case 7:
+            case 8:
             case 'end':
                 return _context.stop();
         }
     }, _callee, this);
 }));
 
-},{"./core/game":8,"./utility/dependency-injector":13,"mainloop.js":3}],10:[function(require,module,exports){
+},{"./core/game":8,"./utility/dependency-injector":14}],10:[function(require,module,exports){
 "use strict";
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -37964,6 +37962,54 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _mainloop = require('mainloop.js');
+
+var _mainloop2 = _interopRequireDefault(_mainloop);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var MainLoopLoopManager = (function () {
+    function MainLoopLoopManager() {
+        _classCallCheck(this, MainLoopLoopManager);
+    }
+
+    _createClass(MainLoopLoopManager, [{
+        key: 'setUpdate',
+        value: function setUpdate(updateMethod) {
+            _mainloop2.default.setUpdate(updateMethod);
+
+            return this;
+        }
+    }, {
+        key: 'setRender',
+        value: function setRender(renderMethod) {
+            _mainloop2.default.setDraw(renderMethod);
+
+            return this;
+        }
+    }, {
+        key: 'start',
+        value: function start() {
+            _mainloop2.default.start();
+        }
+    }]);
+
+    return MainLoopLoopManager;
+})();
+
+exports.default = MainLoopLoopManager;
+
+},{"mainloop.js":3}],12:[function(require,module,exports){
+'use strict';
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
 var _qwest = require('qwest');
 
 var _qwest2 = _interopRequireDefault(_qwest);
@@ -37991,7 +38037,7 @@ var QwestAjaxLoader = (function () {
 
 exports.default = QwestAjaxLoader;
 
-},{"qwest":6}],12:[function(require,module,exports){
+},{"qwest":6}],13:[function(require,module,exports){
 'use strict';
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -38044,7 +38090,7 @@ var ThreeRendererManager = (function () {
 
 exports.default = ThreeRendererManager;
 
-},{"three":7}],13:[function(require,module,exports){
+},{"three":7}],14:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -38065,6 +38111,10 @@ var _levelLoader2 = _interopRequireDefault(_levelLoader);
 
 var _ggEntities = require('gg-entities');
 
+var _mainloopLoopManager = require('./../logic/mainloop-loop-manager');
+
+var _mainloopLoopManager2 = _interopRequireDefault(_mainloopLoopManager);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
@@ -38076,7 +38126,10 @@ exports.default = {
     },
     entityManager: function entityManager() {
         return new _ggEntities.EntityManager();
+    },
+    loopManager: function loopManager() {
+        return new _mainloopLoopManager2.default();
     }
 };
 
-},{"./../logic/level-loader":10,"./../logic/qwest-ajax-loader":11,"./../logic/three-renderer-manager":12,"gg-entities":1}]},{},[9]);
+},{"./../logic/level-loader":10,"./../logic/mainloop-loop-manager":11,"./../logic/qwest-ajax-loader":12,"./../logic/three-renderer-manager":13,"gg-entities":1}]},{},[9]);

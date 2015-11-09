@@ -1,7 +1,5 @@
 /* @flow */
 
-import MainLoop from 'mainloop.js';
-
 import Game from './core/game';
 import DI   from './utility/dependency-injector';
 
@@ -14,7 +12,9 @@ window.onload = async function() {
     
     console.log(level);
     
-    MainLoop.setUpdate(delta => { game.update(delta); })
-            .setDraw(interpolationPercentage => { game.render(interpolationPercentage); })
-            .start();
+    const loopManager = DI.loopManager();
+    
+    loopManager.setUpdate(delta => { game.update(delta); })
+               .setRender(interpolationPercentage => { game.render(interpolationPercentage); })
+               .start();
 };
