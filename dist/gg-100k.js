@@ -37875,7 +37875,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { var callNext = step.bind(null, "next"); var callThrow = step.bind(null, "throw"); function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(callNext, callThrow); } } callNext(); }); }; }
 
 window.onload = _asyncToGenerator(regeneratorRuntime.mark(function _callee() {
-    var game, levelLoader, level, loopManager;
+    var game, levelLoader, level, meshLoader, mesh, loopManager;
     return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
             case 0:
@@ -37889,6 +37889,15 @@ window.onload = _asyncToGenerator(regeneratorRuntime.mark(function _callee() {
 
                 console.log(level);
 
+                meshLoader = _dependencyInjector2.default.meshLoader();
+                _context.next = 9;
+                return meshLoader.load('meshes/' + level.mesh);
+
+            case 9:
+                mesh = _context.sent;
+
+                console.log(mesh);
+
                 loopManager = _dependencyInjector2.default.loopManager();
 
                 loopManager.setUpdate(function (delta) {
@@ -37897,14 +37906,14 @@ window.onload = _asyncToGenerator(regeneratorRuntime.mark(function _callee() {
                     game.render(interpolationPercentage);
                 }).start();
 
-            case 8:
+            case 13:
             case 'end':
                 return _context.stop();
         }
     }, _callee, this);
 }));
 
-},{"./core/game":8,"./utility/dependency-injector":14}],10:[function(require,module,exports){
+},{"./core/game":8,"./utility/dependency-injector":15}],10:[function(require,module,exports){
 "use strict";
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -38054,6 +38063,55 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var ThreeJSONMeshLoader = (function () {
+    function ThreeJSONMeshLoader() {
+        _classCallCheck(this, ThreeJSONMeshLoader);
+
+        this.jsonLoader = new _three2.default.JSONLoader();
+    }
+
+    // todo add options as a destructable object
+
+    _createClass(ThreeJSONMeshLoader, [{
+        key: 'load',
+        value: function load(path) {
+            var _this = this;
+
+            return new Promise(function (resolve, reject) {
+                _this.jsonLoader.load(path, function (geometry, materials) {
+                    // todo use materials being loaded
+                    resolve(geometry);
+                });
+            }).then(function (geometry) {
+                return new _three2.default.Mesh(geometry, new _three2.default.MeshBasicMaterial({ color: 0xd79fd4 }));
+            }).catch(function (err) {
+                console.warn(err);
+            });
+        }
+    }]);
+
+    return ThreeJSONMeshLoader;
+})();
+
+exports.default = ThreeJSONMeshLoader;
+
+},{"three":7}],14:[function(require,module,exports){
+'use strict';
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _three = require('three');
+
+var _three2 = _interopRequireDefault(_three);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 var ThreeRendererManager = (function () {
     function ThreeRendererManager() {
         _classCallCheck(this, ThreeRendererManager);
@@ -38090,28 +38148,32 @@ var ThreeRendererManager = (function () {
 
 exports.default = ThreeRendererManager;
 
-},{"three":7}],14:[function(require,module,exports){
+},{"three":7}],15:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _threeRendererManager = require('./../logic/three-renderer-manager');
+var _threeRendererManager = require('../logic/three-renderer-manager');
 
 var _threeRendererManager2 = _interopRequireDefault(_threeRendererManager);
 
-var _qwestAjaxLoader = require('./../logic/qwest-ajax-loader');
+var _threeJsonMeshLoader = require('../logic/three-json-mesh-loader');
+
+var _threeJsonMeshLoader2 = _interopRequireDefault(_threeJsonMeshLoader);
+
+var _qwestAjaxLoader = require('../logic/qwest-ajax-loader');
 
 var _qwestAjaxLoader2 = _interopRequireDefault(_qwestAjaxLoader);
 
-var _levelLoader = require('./../logic/level-loader');
+var _levelLoader = require('../logic/level-loader');
 
 var _levelLoader2 = _interopRequireDefault(_levelLoader);
 
 var _ggEntities = require('gg-entities');
 
-var _mainloopLoopManager = require('./../logic/mainloop-loop-manager');
+var _mainloopLoopManager = require('../logic/mainloop-loop-manager');
 
 var _mainloopLoopManager2 = _interopRequireDefault(_mainloopLoopManager);
 
@@ -38129,7 +38191,10 @@ exports.default = {
     },
     loopManager: function loopManager() {
         return new _mainloopLoopManager2.default();
+    },
+    meshLoader: function meshLoader() {
+        return new _threeJsonMeshLoader2.default();
     }
 };
 
-},{"./../logic/level-loader":10,"./../logic/mainloop-loop-manager":11,"./../logic/qwest-ajax-loader":12,"./../logic/three-renderer-manager":13,"gg-entities":1}]},{},[9]);
+},{"../logic/level-loader":10,"../logic/mainloop-loop-manager":11,"../logic/qwest-ajax-loader":12,"../logic/three-json-mesh-loader":13,"../logic/three-renderer-manager":14,"gg-entities":1}]},{},[9]);
