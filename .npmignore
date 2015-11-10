@@ -25,3 +25,6 @@ coverage
 
 # Examples folder 
 example
+lib
+old_lib
+old_src
