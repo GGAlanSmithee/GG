@@ -21,4 +21,15 @@ export default class ThreeSceneManager {
     addToScene(sceneId : number, object : three.Object3D) : void {
         this.scenes[sceneId].add(object);
     }
+    
+    addAmbientLightToScene(sceneId : number, color : number) : void {
+        this.scenes[sceneId].add(new three.AmbientLight(color));
+    }
+    
+    addDirectionalLightToScene(sceneId : number, color : number, x : number, y : number, z : number) : void {
+        const light = new three.DirectionalLight(color);
+	    light.position.set(x, y, z);
+	
+        this.scenes[sceneId].add(light);
+    }
 }

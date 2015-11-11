@@ -1,34 +1,24 @@
 /* @flow */
 
-// todo move three and light related functionality to its own class
-import three from 'three';
-
 import DI from './utility/dependency-injector';
 
 window.onload = async function() {
-    const entityManager   = DI.entityManager();
-    const rendererManager = DI.rendererManager();
-    const sceneManager    = DI.sceneManager();
-    const levelLoader     = DI.levelLoader();
-    const meshLoader      = DI.meshLoader();
+    const levelLoader = DI.levelLoader();
+    const level       = await levelLoader.loadLevel('levels/level-one.json');
     
-    const sceneId = sceneManager.createScene();
+    const meshLoader = DI.meshLoader();
+    const mesh       = await meshLoader.load('meshes/' + level.mesh);
     
-    const level = await levelLoader.loadLevel('levels/level-one.json');
-    
-    let mesh = await meshLoader.load('meshes/' + level.mesh);
+    const sceneManager = DI.sceneManager();
+    const sceneId      = sceneManager.createScene();
     
     sceneManager.addToScene(sceneId, mesh);
-    
-    // todo move three and light related functionality to its own class
-    sceneManager.addToScene(sceneId, new three.AmbientLight(0x101030));
-	
-	const directionalLight = new three.DirectionalLight(0xffeedd);
-	directionalLight.position.set(0, 0, 1);
-	
- 	sceneManager.addToScene(sceneId, directionalLight);
+    sceneManager.addAmbientLightToScene(sceneId, 0x101030);
+ 	sceneManager.addDirectionalLightToScene(sceneId, 0xffeedd, 0, 0, 1);
 
-    const loopManager = DI.loopManager();
+    const entityManager   = DI.entityManager();
+    const rendererManager = DI.rendererManager();
+    const loopManager     = DI.loopManager();
     
     loopManager.setUpdate(delta => {
                     mesh.rotation.y += 0.01;

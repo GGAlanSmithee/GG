@@ -37826,10 +37826,6 @@ if (typeof exports !== 'undefined') {
 },{}],8:[function(require,module,exports){
 'use strict';
 
-var _three = require('three');
-
-var _three2 = _interopRequireDefault(_three);
-
 var _dependencyInjector = require('./utility/dependency-injector');
 
 var _dependencyInjector2 = _interopRequireDefault(_dependencyInjector);
@@ -37838,40 +37834,32 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { var callNext = step.bind(null, "next"); var callThrow = step.bind(null, "throw"); function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(callNext, callThrow); } } callNext(); }); }; }
 
-// todo move three and light related functionality to its own class
-
 window.onload = _asyncToGenerator(regeneratorRuntime.mark(function _callee() {
-    var entityManager, rendererManager, sceneManager, levelLoader, meshLoader, sceneId, level, mesh, directionalLight, loopManager;
+    var levelLoader, level, meshLoader, mesh, sceneManager, sceneId, entityManager, rendererManager, loopManager;
     return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
             case 0:
-                entityManager = _dependencyInjector2.default.entityManager();
-                rendererManager = _dependencyInjector2.default.rendererManager();
-                sceneManager = _dependencyInjector2.default.sceneManager();
                 levelLoader = _dependencyInjector2.default.levelLoader();
-                meshLoader = _dependencyInjector2.default.meshLoader();
-                sceneId = sceneManager.createScene();
-                _context.next = 8;
+                _context.next = 3;
                 return levelLoader.loadLevel('levels/level-one.json');
 
-            case 8:
+            case 3:
                 level = _context.sent;
-                _context.next = 11;
+                meshLoader = _dependencyInjector2.default.meshLoader();
+                _context.next = 7;
                 return meshLoader.load('meshes/' + level.mesh);
 
-            case 11:
+            case 7:
                 mesh = _context.sent;
+                sceneManager = _dependencyInjector2.default.sceneManager();
+                sceneId = sceneManager.createScene();
 
                 sceneManager.addToScene(sceneId, mesh);
+                sceneManager.addAmbientLightToScene(sceneId, 0x101030);
+                sceneManager.addDirectionalLightToScene(sceneId, 0xffeedd, 0, 0, 1);
 
-                sceneManager.addToScene(sceneId, new _three2.default.AmbientLight(0x101030));
-
-                directionalLight = new _three2.default.DirectionalLight(0xffeedd);
-
-                directionalLight.position.set(0, 0, 1);
-
-                sceneManager.addToScene(sceneId, directionalLight);
-
+                entityManager = _dependencyInjector2.default.entityManager();
+                rendererManager = _dependencyInjector2.default.rendererManager();
                 loopManager = _dependencyInjector2.default.loopManager();
 
                 loopManager.setUpdate(function (delta) {
@@ -37881,14 +37869,14 @@ window.onload = _asyncToGenerator(regeneratorRuntime.mark(function _callee() {
                     return rendererManager.render(sceneManager.getScene(sceneId), interpolationPercentage);
                 }).start();
 
-            case 19:
+            case 17:
             case 'end':
                 return _context.stop();
         }
     }, _callee, this);
 }));
 
-},{"./utility/dependency-injector":15,"three":7}],9:[function(require,module,exports){
+},{"./utility/dependency-injector":15}],9:[function(require,module,exports){
 "use strict";
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -38077,6 +38065,7 @@ var ThreeObjectMeshLoader = (function () {
                     return reject(err);
                 });
             }).then(function (mesh) {
+                //todo this now returns a scene.. implications?
                 return mesh;
             }).catch(function (err) {
                 console.warn(err);
@@ -38174,6 +38163,19 @@ var ThreeSceneManager = (function () {
         key: 'addToScene',
         value: function addToScene(sceneId, object) {
             this.scenes[sceneId].add(object);
+        }
+    }, {
+        key: 'addAmbientLightToScene',
+        value: function addAmbientLightToScene(sceneId, color) {
+            this.scenes[sceneId].add(new _three2.default.AmbientLight(color));
+        }
+    }, {
+        key: 'addDirectionalLightToScene',
+        value: function addDirectionalLightToScene(sceneId, color, x, y, z) {
+            var light = new _three2.default.DirectionalLight(color);
+            light.position.set(x, y, z);
+
+            this.scenes[sceneId].add(light);
         }
     }]);
 
