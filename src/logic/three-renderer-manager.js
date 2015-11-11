@@ -4,32 +4,23 @@ import three from 'three';
 
 export default class ThreeRendererManager {
     renderer     : three.WebGLRenderer;
-    currentScene : three.Scene;
     camera       : three.Camera;
-    cube         : three.Mesh;
     
     constructor() {
-        this.renderer     = new three.WebGLRenderer();
-        this.currentScene = new three.Scene();
-        this.camera       = new three.PerspectiveCamera();
+        this.renderer = new three.WebGLRenderer();
+        this.camera   = new three.PerspectiveCamera();
         
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         
         document.body.appendChild(this.renderer.domElement);
         
-        let geometry = new three.BoxGeometry(1, 1, 1);
-        let material = new three.MeshBasicMaterial({ color: 0x00ff00 });
-        this.cube     = new three.Mesh(geometry, material);
+        this.camera.position.y = 20;
+        this.camera.position.z = 20;
         
-        this.currentScene.add(this.cube);
-        
-        this.camera.position.z = 5;
+        this.camera.lookAt(new three.Vector3(0.0, 0.0, 0.0));
     }
     
-    render(interpolationPercentage : number) : void {
-        this.cube.rotation.x += 0.1;
-        this.cube.rotation.y += 0.1;
-
-        this.renderer.render(this.currentScene, this.camera);
+    render(scene : three.Scene, interpolationPercentage : number) : void {
+        this.renderer.render(scene, this.camera);
     }
 }

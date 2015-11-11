@@ -37824,47 +37824,11 @@ if (typeof exports !== 'undefined') {
 }
 
 },{}],8:[function(require,module,exports){
-"use strict";
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Game = (function () {
-    function Game(entityManager, rendererManager) {
-        _classCallCheck(this, Game);
-
-        this.entityManager = entityManager;
-        this.rendererManager = rendererManager;
-    }
-
-    _createClass(Game, [{
-        key: "update",
-        value: function update(delta) {
-            this.entityManager.onLogic(delta);
-        }
-    }, {
-        key: "render",
-        value: function render(interpolationPercentage) {
-            this.rendererManager.render(interpolationPercentage);
-        }
-    }]);
-
-    return Game;
-})();
-
-exports.default = Game;
-
-},{}],9:[function(require,module,exports){
 'use strict';
 
-var _game = require('./core/game');
+var _three = require('three');
 
-var _game2 = _interopRequireDefault(_game);
+var _three2 = _interopRequireDefault(_three);
 
 var _dependencyInjector = require('./utility/dependency-injector');
 
@@ -37874,46 +37838,57 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { var callNext = step.bind(null, "next"); var callThrow = step.bind(null, "throw"); function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(callNext, callThrow); } } callNext(); }); }; }
 
+// todo move three and light related functionality to its own class
+
 window.onload = _asyncToGenerator(regeneratorRuntime.mark(function _callee() {
-    var game, levelLoader, level, meshLoader, mesh, loopManager;
+    var entityManager, rendererManager, sceneManager, levelLoader, meshLoader, sceneId, level, mesh, directionalLight, loopManager;
     return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
             case 0:
-                game = new _game2.default(_dependencyInjector2.default.entityManager(), _dependencyInjector2.default.rendererManager());
+                entityManager = _dependencyInjector2.default.entityManager();
+                rendererManager = _dependencyInjector2.default.rendererManager();
+                sceneManager = _dependencyInjector2.default.sceneManager();
                 levelLoader = _dependencyInjector2.default.levelLoader();
-                _context.next = 4;
+                meshLoader = _dependencyInjector2.default.meshLoader();
+                sceneId = sceneManager.createScene();
+                _context.next = 8;
                 return levelLoader.loadLevel('levels/level-one.json');
 
-            case 4:
+            case 8:
                 level = _context.sent;
-
-                console.log(level);
-
-                meshLoader = _dependencyInjector2.default.meshLoader();
-                _context.next = 9;
+                _context.next = 11;
                 return meshLoader.load('meshes/' + level.mesh);
 
-            case 9:
+            case 11:
                 mesh = _context.sent;
 
-                console.log(mesh);
+                sceneManager.addToScene(sceneId, mesh);
+
+                sceneManager.addToScene(sceneId, new _three2.default.AmbientLight(0x101030));
+
+                directionalLight = new _three2.default.DirectionalLight(0xffeedd);
+
+                directionalLight.position.set(0, 0, 1);
+
+                sceneManager.addToScene(sceneId, directionalLight);
 
                 loopManager = _dependencyInjector2.default.loopManager();
 
                 loopManager.setUpdate(function (delta) {
-                    game.update(delta);
+                    mesh.rotation.y += 0.01;
+                    entityManager.onLogic(delta);
                 }).setRender(function (interpolationPercentage) {
-                    game.render(interpolationPercentage);
+                    return rendererManager.render(sceneManager.getScene(sceneId), interpolationPercentage);
                 }).start();
 
-            case 13:
+            case 19:
             case 'end':
                 return _context.stop();
         }
     }, _callee, this);
 }));
 
-},{"./core/game":8,"./utility/dependency-injector":15}],10:[function(require,module,exports){
+},{"./utility/dependency-injector":15,"three":7}],9:[function(require,module,exports){
 "use strict";
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -37962,7 +37937,7 @@ var LevelLoader = (function () {
 
 exports.default = LevelLoader;
 
-},{}],11:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 'use strict';
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -38010,7 +37985,7 @@ var MainLoopLoopManager = (function () {
 
 exports.default = MainLoopLoopManager;
 
-},{"mainloop.js":3}],12:[function(require,module,exports){
+},{"mainloop.js":3}],11:[function(require,module,exports){
 'use strict';
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -38046,7 +38021,7 @@ var QwestAjaxLoader = (function () {
 
 exports.default = QwestAjaxLoader;
 
-},{"qwest":6}],13:[function(require,module,exports){
+},{"qwest":6}],12:[function(require,module,exports){
 'use strict';
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -38063,39 +38038,58 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var ThreeJSONMeshLoader = (function () {
-    function ThreeJSONMeshLoader() {
-        _classCallCheck(this, ThreeJSONMeshLoader);
+var ThreeObjectMeshLoader = (function () {
+    function ThreeObjectMeshLoader() {
+        _classCallCheck(this, ThreeObjectMeshLoader);
 
-        this.jsonLoader = new _three2.default.JSONLoader();
+        this.loader = new _three2.default.ObjectLoader();
     }
 
-    // todo add options as a destructable object
+    _createClass(ThreeObjectMeshLoader, [{
+        key: 'onProgress',
+        value: function onProgress() {}
+        // placeholder
 
-    _createClass(ThreeJSONMeshLoader, [{
+        // todo add options as a destructable object
+
+    }, {
         key: 'load',
         value: function load(path) {
-            var _this = this;
+            var self = this;
 
             return new Promise(function (resolve, reject) {
-                _this.jsonLoader.load(path, function (geometry, materials) {
-                    // todo use materials being loaded
-                    resolve(geometry);
+                self.loader.load(path, function (obj) {
+                    obj.traverse(function (child) {
+                        if (child instanceof _three2.default.Mesh) {
+                            child.material = new _three2.default.MeshPhongMaterial({
+                                color: 0xdddddd,
+                                specular: 0x009900,
+                                shininess: 30,
+                                shading: _three2.default.FlatShading
+                            });
+                        }
+                    });
+
+                    resolve(obj);
+                }, function (info) {
+                    return self.onProgress(info);
+                }, function (err) {
+                    return reject(err);
                 });
-            }).then(function (geometry) {
-                return new _three2.default.Mesh(geometry, new _three2.default.MeshBasicMaterial({ color: 0xd79fd4 }));
+            }).then(function (mesh) {
+                return mesh;
             }).catch(function (err) {
                 console.warn(err);
             });
         }
     }]);
 
-    return ThreeJSONMeshLoader;
+    return ThreeObjectMeshLoader;
 })();
 
-exports.default = ThreeJSONMeshLoader;
+exports.default = ThreeObjectMeshLoader;
 
-},{"three":7}],14:[function(require,module,exports){
+},{"three":7}],13:[function(require,module,exports){
 'use strict';
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -38117,29 +38111,22 @@ var ThreeRendererManager = (function () {
         _classCallCheck(this, ThreeRendererManager);
 
         this.renderer = new _three2.default.WebGLRenderer();
-        this.currentScene = new _three2.default.Scene();
         this.camera = new _three2.default.PerspectiveCamera();
 
         this.renderer.setSize(window.innerWidth, window.innerHeight);
 
         document.body.appendChild(this.renderer.domElement);
 
-        var geometry = new _three2.default.BoxGeometry(1, 1, 1);
-        var material = new _three2.default.MeshBasicMaterial({ color: 0x00ff00 });
-        this.cube = new _three2.default.Mesh(geometry, material);
+        this.camera.position.y = 20;
+        this.camera.position.z = 20;
 
-        this.currentScene.add(this.cube);
-
-        this.camera.position.z = 5;
+        this.camera.lookAt(new _three2.default.Vector3(0.0, 0.0, 0.0));
     }
 
     _createClass(ThreeRendererManager, [{
         key: 'render',
-        value: function render(interpolationPercentage) {
-            this.cube.rotation.x += 0.1;
-            this.cube.rotation.y += 0.1;
-
-            this.renderer.render(this.currentScene, this.camera);
+        value: function render(scene, interpolationPercentage) {
+            this.renderer.render(scene, this.camera);
         }
     }]);
 
@@ -38147,6 +38134,53 @@ var ThreeRendererManager = (function () {
 })();
 
 exports.default = ThreeRendererManager;
+
+},{"three":7}],14:[function(require,module,exports){
+'use strict';
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _three = require('three');
+
+var _three2 = _interopRequireDefault(_three);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var ThreeSceneManager = (function () {
+    function ThreeSceneManager() {
+        _classCallCheck(this, ThreeSceneManager);
+
+        this.scenes = [];
+    }
+
+    _createClass(ThreeSceneManager, [{
+        key: 'createScene',
+        value: function createScene() {
+            // Create a new scene, add it to the scenes list and return a handle to it
+            return this.scenes.push(new _three2.default.Scene()) - 1;
+        }
+    }, {
+        key: 'getScene',
+        value: function getScene(sceneId) {
+            return this.scenes[sceneId];
+        }
+    }, {
+        key: 'addToScene',
+        value: function addToScene(sceneId, object) {
+            this.scenes[sceneId].add(object);
+        }
+    }]);
+
+    return ThreeSceneManager;
+})();
+
+exports.default = ThreeSceneManager;
 
 },{"three":7}],15:[function(require,module,exports){
 'use strict';
@@ -38159,9 +38193,13 @@ var _threeRendererManager = require('../logic/three-renderer-manager');
 
 var _threeRendererManager2 = _interopRequireDefault(_threeRendererManager);
 
-var _threeJsonMeshLoader = require('../logic/three-json-mesh-loader');
+var _threeSceneManager = require('../logic/three-scene-manager');
 
-var _threeJsonMeshLoader2 = _interopRequireDefault(_threeJsonMeshLoader);
+var _threeSceneManager2 = _interopRequireDefault(_threeSceneManager);
+
+var _threeObjectMeshLoader = require('../logic/three-object-mesh-loader');
+
+var _threeObjectMeshLoader2 = _interopRequireDefault(_threeObjectMeshLoader);
 
 var _qwestAjaxLoader = require('../logic/qwest-ajax-loader');
 
@@ -38183,6 +38221,9 @@ exports.default = {
     rendererManager: function rendererManager() {
         return new _threeRendererManager2.default();
     },
+    sceneManager: function sceneManager() {
+        return new _threeSceneManager2.default();
+    },
     levelLoader: function levelLoader() {
         return new _levelLoader2.default(new _qwestAjaxLoader2.default());
     },
@@ -38193,8 +38234,8 @@ exports.default = {
         return new _mainloopLoopManager2.default();
     },
     meshLoader: function meshLoader() {
-        return new _threeJsonMeshLoader2.default();
+        return new _threeObjectMeshLoader2.default();
     }
 };
 
-},{"../logic/level-loader":10,"../logic/mainloop-loop-manager":11,"../logic/qwest-ajax-loader":12,"../logic/three-json-mesh-loader":13,"../logic/three-renderer-manager":14,"gg-entities":1}]},{},[9]);
+},{"../logic/level-loader":9,"../logic/mainloop-loop-manager":10,"../logic/qwest-ajax-loader":11,"../logic/three-object-mesh-loader":12,"../logic/three-renderer-manager":13,"../logic/three-scene-manager":14,"gg-entities":1}]},{},[8]);

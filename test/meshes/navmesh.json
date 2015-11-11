@@ -1,0 +1,92 @@
+{
+    "metadata": {
+        "generator": "io_three",
+        "version": 4.4,
+        "type": "Object"
+    },
+    "materials": [{
+        "ambient": 11579568,
+        "color": 11579568,
+        "side": 2,
+        "blending": "NormalBlending",
+        "uuid": "3070F8ED-68CE-333B-92BD-338D10760C82",
+        "depthTest": true,
+        "vertexColors": false,
+        "depthWrite": true,
+        "name": "PlaneDefault",
+        "emissive": 0,
+        "shininess": 50,
+        "specular": 8355711,
+        "type": "MeshPhongMaterial"
+    }],
+    "geometries": [{
+        "uuid": "FDA35051-77AC-3FCF-B642-34C990EA7344",
+        "data": {
+            "vertices": [-2,2,3.14684,2,2,0,-2,-2,2.78509,2,-2,3.14684,1.47548,-0.253994,4.01872,-0.950952,1.127,4.01872,1.47548,1.127,3.65696,-0.15463,0.900385,3.32437,1.07732,0.199229,3.32437,1.07732,0.900385,3.32437],
+            "morphTargets": [],
+            "normals": [-0.077212,0.475997,0.876034,-0.089694,-0.089694,0.991913,0.440321,-0.230171,0.867824,0.495956,-0.065127,0.865871,-0.149266,0.571093,0.807184,-0.320597,-0.428205,0.844874,0.323679,-0.140996,0.935575,-0.252907,0.145787,0.95642,0.66277,0.672475,0.329325,0.460707,0.443159,0.768944],
+            "metadata": {
+                "generator": "io_three",
+                "uvs": 0,
+                "materials": 1,
+                "vertices": 10,
+                "morphTargets": 0,
+                "normals": 10,
+                "bones": 0,
+                "version": 3,
+                "faces": 8
+            },
+            "animations": [],
+            "faces": [34,0,2,3,0,0,1,2,34,7,8,9,0,3,4,5,35,0,3,4,5,0,0,2,6,7,35,3,1,6,4,0,2,8,9,6,35,1,0,5,6,0,8,0,7,9,35,5,4,8,7,0,7,6,4,3,35,4,6,9,8,0,6,9,5,4,35,6,5,7,9,0,9,7,3,5],
+            "uvs": [],
+            "influencesPerVertex": 2,
+            "skinIndices": [],
+            "skinWeights": [],
+            "name": "PlaneGeometry",
+            "bones": []
+        },
+        "materials": [{
+            "colorAmbient": [0.690196,0.690196,0.690196],
+            "colorDiffuse": [0.690196,0.690196,0.690196],
+            "wireframe": false,
+            "doubleSided": true,
+            "DbgColor": 15658734,
+            "opacity": 1,
+            "DbgIndex": 0,
+            "colorSpecular": [0.5,0.5,0.5],
+            "shading": "phong",
+            "blending": "NormalBlending",
+            "colorEmissive": [0,0,0],
+            "visible": true,
+            "transparent": false,
+            "specularCoef": 50,
+            "DbgName": "PlaneDefault",
+            "depthTest": true,
+            "depthWrite": true
+        }],
+        "type": "Geometry"
+    }],
+    "object": {
+        "uuid": "E1C91D57-99BB-4BD6-BBE7-9C8CB064EDE0",
+        "type": "Scene",
+        "children": [{
+            "name": "Plane",
+            "uuid": "631279BD-3DB0-34E6-BE17-B19991DEF360",
+            "matrix": [-4.1951,0,0,0,0,0,4.1951,0,0,1,0,0,0,0.1539,0,1],
+            "visible": true,
+            "type": "Mesh",
+            "material": "3070F8ED-68CE-333B-92BD-338D10760C82",
+            "castShadow": true,
+            "receiveShadow": true,
+            "geometry": "FDA35051-77AC-3FCF-B642-34C990EA7344"
+        }],
+        "matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]
+    },
+    "animations": [{
+        "tracks": [],
+        "fps": 29,
+        "name": "default"
+    }],
+    "images": [],
+    "textures": []
+}

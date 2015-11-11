@@ -1,26 +1,39 @@
 /* @flow */
 
-import Game from './core/game';
-import DI   from './utility/dependency-injector';
+// todo move three and light related functionality to its own class
+import three from 'three';
+
+import DI from './utility/dependency-injector';
 
 window.onload = async function() {
-    const game = new Game(DI.entityManager(), DI.rendererManager());
+    const entityManager   = DI.entityManager();
+    const rendererManager = DI.rendererManager();
+    const sceneManager    = DI.sceneManager();
+    const levelLoader     = DI.levelLoader();
+    const meshLoader      = DI.meshLoader();
     
-    const levelLoader = DI.levelLoader();
+    const sceneId = sceneManager.createScene();
     
     const level = await levelLoader.loadLevel('levels/level-one.json');
     
-    console.log(level);
+    let mesh = await meshLoader.load('meshes/' + level.mesh);
     
-    const meshLoader = DI.meshLoader();
+    sceneManager.addToScene(sceneId, mesh);
     
-    const mesh = await meshLoader.load('meshes/' + level.mesh);
-    
-    console.log(mesh);
-    
+    // todo move three and light related functionality to its own class
+    sceneManager.addToScene(sceneId, new three.AmbientLight(0x101030));
+	
+	const directionalLight = new three.DirectionalLight(0xffeedd);
+	directionalLight.position.set(0, 0, 1);
+	
+ 	sceneManager.addToScene(sceneId, directionalLight);
+
     const loopManager = DI.loopManager();
     
-    loopManager.setUpdate(delta => { game.update(delta); })
-               .setRender(interpolationPercentage => { game.render(interpolationPercentage); })
+    loopManager.setUpdate(delta => {
+                    mesh.rotation.y += 0.01;
+                    entityManager.onLogic(delta);
+                })
+               .setRender(interpolationPercentage => rendererManager.render(sceneManager.getScene(sceneId), interpolationPercentage))
                .start();
 };

@@ -1,5 +1,5 @@
 {
     "name": "level-one",
     "nav-mesh": "level.nav.js",
-    "mesh": "level.js"
+    "mesh": "navmesh.json"
 }
