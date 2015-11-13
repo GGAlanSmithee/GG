@@ -10,7 +10,7 @@ export default class ThreeSceneManager {
     }
     
     createScene() : number {
-        // Create a new scene, add it to the scenes list and return a handle to it
+        // Create a new scene, add it to the list of scenes and return a handle (id) to it
         return this.scenes.push(new three.Scene()) - 1;
     }
     
@@ -31,5 +31,9 @@ export default class ThreeSceneManager {
 	    light.position.set(x, y, z);
 	
         this.scenes[sceneId].add(light);
+    }
+    
+    removeFromScene(sceneId : number, object : three.Object3D) : void {
+        this.scenes[sceneId].remove(object);
     }
 }

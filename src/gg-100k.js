@@ -22,8 +22,20 @@ window.onload = async function() {
     const rendererManager = DI.rendererManager();
     const loopManager     = DI.loopManager();
     
+    var meshIsAdded = true;
+    
+    document.addEventListener('click', e => {
+        if (meshIsAdded) {
+            sceneManager.removeFromScene(sceneId, mesh);
+        } else {
+            sceneManager.addToScene(sceneId, mesh);
+        }
+        
+        meshIsAdded = !meshIsAdded;
+    });
+    
     loopManager.setUpdate(delta => {
-                    mesh.rotation.y += 0.01;
+                    mesh.rotation.y += 0.001 * delta;
                     entityManager.onLogic(delta);
                 })
                .setRender(interpolationPercentage => rendererManager.render(sceneManager.getScene(sceneId), interpolationPercentage))
