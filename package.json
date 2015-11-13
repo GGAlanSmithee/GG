@@ -9,7 +9,7 @@
   },
   "scripts": {
     "prebuild": "mkdir dist -p",
-    "build": "browserify src/gg-100k.js -t [ babelify --presets [ es2015 ] --plugins [ syntax-async-functions transform-async-to-generator transform-flow-strip-types ] ] -o dist/gg-100k.js"
+    "build": "browserify src/gg-100k.js -d -t [ babelify --sourceMaps=inline --presets [ es2015 ] --plugins [ syntax-async-functions transform-async-to-generator transform-flow-strip-types ] ] -o dist/gg-100k.js"
   },
   "repository": {
     "type": "git",
