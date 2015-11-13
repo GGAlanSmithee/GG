@@ -2,12 +2,14 @@
 
 import DI from './utility/dependency-injector';
 
+import { FlatShading } from './constants/shading';
+
 window.onload = async function() {
     const levelLoader = DI.levelLoader();
     const level       = await levelLoader.loadLevel('levels/level-one.json');
     
     const meshLoader = DI.meshLoader();
-    const mesh       = await meshLoader.load('meshes/' + level.mesh);
+    const mesh       = await meshLoader.load('meshes/' + level.mesh, { shading : FlatShading });
     
     const sceneManager = DI.sceneManager();
     const sceneId      = sceneManager.createScene();

@@ -13,29 +13,30 @@ export default class ThreeObjectMeshLoader {
         // placeholder
     }
     
-    // todo add options as a destructable object
-    load(path : string) : Promise {
+    // todo this now returns a scene.. implications?
+    // todo add options as a destructable object -> stopped by flow: https://github.com/facebook/flow/issues/183
+    load(path : string, options? : Object) : Promise {
         const self = this;
         
+        const shading = (options || { }).shading;
+        
         return new Promise((resolve, reject) => {
-            self.loader.load(path, obj => {
-                obj.traverse(child => {
-                    if (child instanceof three.Mesh) {
-    				    child.material = new three.MeshPhongMaterial({
-    				        color: 0xdddddd,
-    				        specular: 0x009900,
-    				        shininess: 30,
-    				        shading: three.FlatShading
-    				    });
-    				}
-				});
-				
-                resolve(obj)
-            },
-            info => self.onProgress(info),
-            err => reject(err));
+            try {
+                self.loader.load(path, obj => resolve(obj), info => self.onProgress(info), err => reject(err));
+            } catch (error) {
+                reject(error);
+            }
         }).then(mesh => {
-            //todo this now returns a scene.. implications?
+            if (typeof shading !== 'number') {
+                return mesh;
+            }
+            
+            mesh.traverse(child => {
+                if (child instanceof three.Mesh) {
+                   child.material.shading = shading;
+               }
+            });
+            
             return mesh;
         }).catch(err => {
             console.warn(err);
