@@ -4,7 +4,7 @@ var npm  = require('rollup-plugin-npm');
 var commonjs  = require('rollup-plugin-commonjs');
 
 rollup.rollup({
-  entry: 'test/index.js',
+  entry: 'src/gg-100k.js',
   external: [ 'three' ],
   plugins: [
     npm({
@@ -12,11 +12,13 @@ rollup.rollup({
       main: true,
       skip: 'node_modules/three/three.js'
     }),
-    commonjs(),
+    commonjs({
+      include: 'node_modules/**',
+    }),
     babel({
       exclude: 'node_modules/three/**',
       presets: [ 'es2015-rollup' ],
-      plugins: [ 'transform-async-to-generator', 'transform-flow-strip-types' ]
+      plugins: [ 'transform-async-to-generator', 'transform-flow-strip-types', 'transform-class-properties' ]
     })
   ]
 }).then(function(bundle) {
@@ -24,7 +26,7 @@ rollup.rollup({
     globals: {
       three: 'THREE'
     },
-    dest: 'test/out.js',
+    dest: 'dist/gg-100k.js',
     sourceMap: 'inline',
     format: 'umd',
     moduleId: 'Test',

@@ -25,8 +25,6 @@ window.onload = async function() {
     
     var meshIsAdded = true;
     
-    rendererManager.test(sceneManager);
-    
     document.addEventListener('click', e => {
         if (meshIsAdded) {
             sceneManager.removeFromScene(sceneId, meshManager.getMesh(meshId));
