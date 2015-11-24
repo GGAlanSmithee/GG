@@ -9,7 +9,7 @@
   },
   "scripts": {
     "prebuild": "mkdir dist -p",
-    "build": ""
+    "build": "node build/bundle"
   },
   "repository": {
     "type": "git",
