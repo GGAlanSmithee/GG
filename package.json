@@ -24,6 +24,7 @@
     "babel-polyfill": "^6.2.0",
     "gg-entities": "^1.0.4",
     "qwest": "^2.2.3",
+    "stats.js": "0.0.14-master",
     "three": "^0.73.0"
   },
   "devDependencies": {

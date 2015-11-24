@@ -7,7 +7,7 @@ export default class ThreeRendererManager {
     camera       : three.Camera;
     
     constructor() {
-        this.renderer = new three.WebGLRenderer();
+        this.renderer = new three.WebGLRenderer({ antialias : true });
         this.camera   = new three.PerspectiveCamera();
         
         this.renderer.setSize(window.innerWidth, window.innerHeight);
