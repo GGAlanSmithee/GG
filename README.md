@@ -1,5 +1,3 @@
-# 100k
+# GG
 
-RTS in the browser.
-
-## [Wiki](https://bitbucket.org/ggalansmithee/100k/wiki/Home)
+Game engine WIP
