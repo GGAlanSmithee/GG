@@ -23,7 +23,6 @@
   "dependencies": {
     "babel-polyfill": "^6.2.0",
     "gg-entities": "^1.0.4",
-    "mainloop.js": "^1.0.1",
     "qwest": "^2.2.3",
     "three": "^0.73.0"
   },

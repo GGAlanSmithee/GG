@@ -13,7 +13,7 @@ rollup.rollup({
       skip: 'node_modules/three/three.js'
     }),
     commonjs({
-      include: 'node_modules/**',
+      include: [ 'node_modules/**', 'src/external/**' ]
     }),
     babel({
       exclude: 'node_modules/three/**',
