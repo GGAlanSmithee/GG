@@ -1,3 +1,3 @@
-# 100k #
+# GG
 
-RTS in the browser.
+Game engine WIP
