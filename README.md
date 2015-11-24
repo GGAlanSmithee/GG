@@ -11,5 +11,7 @@ Game engine WIP
 - `git checkout dev`
 - `git checkout -b <feature>` *where <feature> is what you are implementing*
 - `npm i`
+- `npm run build` to build
+- `test/index.html` to test
 - implement feature *don't forget to keep updated with dev*
 - send a pull request targeting the dev branch
