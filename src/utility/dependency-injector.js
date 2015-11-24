@@ -1,12 +1,15 @@
 /* @flow*/
 
-import ThreeRendererManager  from '../logic/three-renderer-manager';
+import { EntityManager } from 'gg-entities';
+
+import ThreeRendererManager   from '../view/three-renderer-manager';
+import StatsPerformanceViewer from '../view/stats-performance-viewer';
+
 import ThreeSceneManager     from '../logic/three-scene-manager';
 import ThreeMeshManager      from '../logic/three-mesh-manager';
 import ThreeObjectMeshLoader from '../logic/three-object-mesh-loader';
 import QWestAjaxLoader       from '../logic/qwest-ajax-loader';
 import LevelLoader           from '../logic/level-loader';
-import { EntityManager }     from 'gg-entities';
 import MainLoopLoopManager   from '../logic/mainloop-loop-manager';
 
 export default {
@@ -22,5 +25,7 @@ export default {
     
     loopManager() : ILoopManager { return new MainLoopLoopManager(); },
     
-    meshLoader() : IMeshLoader { return new ThreeObjectMeshLoader(); }
+    meshLoader() : IMeshLoader { return new ThreeObjectMeshLoader(); },
+    
+    performanceViewer() : IPerformanceViewer { return new StatsPerformanceViewer(); }
 };

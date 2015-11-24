@@ -35,10 +35,20 @@ window.onload = async function() {
         meshIsAdded = !meshIsAdded;
     });
     
+    const performanceViewer = DI.performanceViewer();
+    
+    performanceViewer.setMode(0);
+    
     loopManager.setUpdate(delta => {
                     meshManager.getMesh(meshId).rotation.y += 0.001 * delta;
                     entityManager.onLogic(delta);
                 })
-               .setRender(interpolationPercentage => rendererManager.render(sceneManager.getScene(sceneId), interpolationPercentage))
+               .setRender(interpolationPercentage => {
+                   performanceViewer.begin();
+                   
+                   rendererManager.render(sceneManager.getScene(sceneId), interpolationPercentage);
+                   
+                   performanceViewer.end();
+               })
                .start();
 };
