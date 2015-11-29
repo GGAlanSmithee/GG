@@ -4,7 +4,7 @@ var npm  = require('rollup-plugin-npm');
 var commonjs  = require('rollup-plugin-commonjs');
 
 rollup.rollup({
-  entry: 'src/gg-100k.js',
+  entry: 'src/gg.js',
   external: [ 'three' ],
   plugins: [
     npm({
@@ -26,11 +26,11 @@ rollup.rollup({
     globals: {
       three: 'THREE'
     },
-    dest: 'dist/gg-100k.js',
+    dest: 'dist/gg.js',
     sourceMap: 'inline',
     format: 'umd',
-    moduleId: 'Test',
-    moduleName: 'Test'
+    moduleId: 'GG',
+    moduleName: 'GG'
   });
 }).catch(function(err) {
   console.warn(err);
