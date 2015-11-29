@@ -1,22 +1,23 @@
 {
-  "name": "gg-rts100k",
-  "version": "1.0.0",
-  "description": "rts for the browser",
+  "name": "gg",
+  "version": "0.0.1",
+  "description": "general purpose game engine in javascript",
   "main": "dist/gg-100k.js",
   "author": {
     "name": "Alan Smithee",
     "email": "ggnore.alan.smithee@gmail.com"
   },
+  "license": "MIT",
   "scripts": {
     "prebuild": "mkdir dist -p",
     "build": "node build/bundle"
   },
   "repository": {
     "type": "git",
-    "url": "git@bitbucket.org:ggnore/100k.git"
+    "url": "git@github.com:GGAlanSmithee/GG.git"
   },
   "keywords": [
-    "rts",
+    "game engine",
     "javascript",
     "js"
   ],
