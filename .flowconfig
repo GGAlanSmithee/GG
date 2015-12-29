@@ -1,13 +1,14 @@
 [ignore]
-.*/build/.*
-.*/dist/.*
-.*/.c9/.*
-.*/node_modules/.*
+build/.*
+dist/.*
+.c9/.*
+.git/.*
+node_modules/.*
 
 [include]
-.*/src/.*
+src/.*
 
 [libs]
-lib/
+lib/.*
 
 [options]
