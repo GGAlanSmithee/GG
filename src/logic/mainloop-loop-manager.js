@@ -1,6 +1,6 @@
 /* @flow */
 
-import MainLoop from '../external/mainloop.js';
+import MainLoop from 'mainloop.js';
 
 export default class MainLoopLoopManager {
     setUpdate(updateMethod : (delta : number) => void) : MainLoopLoopManager {

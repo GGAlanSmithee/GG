@@ -24,6 +24,7 @@
   "dependencies": {
     "babel-polyfill": "^6.7.4",
     "gg-entities": "^1.0.4",
+    "mainloop.js": "^1.0.3",
     "qwest": "^4.3.2",
     "stats.js": "0.0.14-master",
     "three": "^0.75.0"
