@@ -22,21 +22,21 @@
     "js"
   ],
   "dependencies": {
-    "babel-polyfill": "^6.2.0",
+    "babel-polyfill": "^6.7.4",
     "gg-entities": "^1.0.4",
-    "qwest": "^2.2.3",
+    "qwest": "^4.3.2",
     "stats.js": "0.0.14-master",
-    "three": "^0.73.0"
+    "three": "^0.75.0"
   },
   "devDependencies": {
-    "babel-plugin-transform-async-to-generator": "^6.1.18",
-    "babel-plugin-transform-class-properties": "^6.2.2",
-    "babel-plugin-transform-flow-strip-types": "^6.1.18",
-    "babel-preset-es2015-rollup": "^1.0.0",
-    "flow-bin": "^0.18.1",
-    "rollup": "^0.21.0",
-    "rollup-plugin-babel": "^2.1.0",
-    "rollup-plugin-commonjs": "^1.4.0",
-    "rollup-plugin-npm": "^1.1.0"
+    "babel-plugin-transform-async-to-generator": "^6.7.4",
+    "babel-plugin-transform-class-properties": "^6.6.0",
+    "babel-plugin-transform-flow-strip-types": "^6.7.0",
+    "babel-preset-es2015-rollup": "^1.1.1",
+    "flow-bin": "^0.22.1",
+    "rollup": "^0.25.7",
+    "rollup-plugin-babel": "^2.4.0",
+    "rollup-plugin-commonjs": "^2.2.1",
+    "rollup-plugin-npm": "^1.4.0"
   }
 }
