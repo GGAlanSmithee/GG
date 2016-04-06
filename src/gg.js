@@ -20,7 +20,6 @@ export default class GG {
     }
     
     start() {
-        console.log('HEJ ROBIN');
         // const fileLoader = DI.fileLoader();
         
         // fileLoader.get(path).then(res => {

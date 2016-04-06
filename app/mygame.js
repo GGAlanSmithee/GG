@@ -1204,7 +1204,6 @@
           value: function start() {
               var _this = this;
 
-              console.log('HEJ ROBIN');
               // const fileLoader = DI.fileLoader();
 
               // fileLoader.get(path).then(res => {
