@@ -2,14 +2,13 @@
   "name": "gg",
   "version": "0.0.1",
   "description": "general purpose game engine in javascript",
-  "main": "dist/gg-100k.js",
+  "main": "dist/gg.js",
   "author": {
     "name": "Alan Smithee",
     "email": "ggnore.alan.smithee@gmail.com"
   },
   "license": "MIT",
   "scripts": {
-    "prebuild": "mkdir dist -p",
     "build": "node build/bundle"
   },
   "repository": {
@@ -23,13 +22,17 @@
   ],
   "dependencies": {
     "babel-polyfill": "^6.7.4",
+    "es6-promise": "^3.1.2",
     "gg-entities": "^1.0.4",
+    "isomorphic-fetch": "^2.2.1",
     "mainloop.js": "^1.0.3",
+    "node-fetch": "^1.4.1",
     "qwest": "^4.3.2",
     "stats.js": "0.0.14-master",
     "three": "^0.75.0"
   },
   "devDependencies": {
+    "babel-cli": "^6.6.5",
     "babel-plugin-transform-async-to-generator": "^6.7.4",
     "babel-plugin-transform-class-properties": "^6.6.0",
     "babel-plugin-transform-flow-strip-types": "^6.7.0",
