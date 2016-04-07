@@ -5,18 +5,10 @@ import { EntityManager } from 'gg-entities';
 import * as DI from './DI';
 
 export default class GG {
-    constructor({
-        components = 'components',
-        systems    = 'systems',
-        entities   = 'entities'
-    } = {}) {
-        this.components = components;
-        this.systems    = systems;
-        this.entities   = entities;
-        
+    constructor(platform) {
         this.entityManager = new EntityManager();
         
-        console.log(components, systems, entities);
+        console.log(platform);
     }
     
     start() {

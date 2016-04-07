@@ -10,7 +10,9 @@ var fs = require('fs');
 
 var codeGenerator = require('./src/code');
 
-var code = codeGenerator.getHeader() +
+var platform = program.getPlatform();
+
+var code = codeGenerator.getHeader(platform) +
            codeGenerator.getComponentsSection(config.components) +
            codeGenerator.getSystemsSection(config.systems) +
            codeGenerator.getFooter();
@@ -19,4 +21,4 @@ var output = program.getOutput();
 
 fs.writeFileSync(output, code);
 
-require('./src/bundle').run(output);
+require('./src/bundle').run(output, program.getPlatform());

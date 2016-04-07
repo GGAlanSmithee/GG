@@ -1,11 +1,11 @@
 import MainLoopLoopManager from '../logic/mainloop-loop-manager';
-import NodeFileLoader          from '../logic/node-file-loader';
-import FetchFileLoader          from '../logic/fetch-file-loader';
+import NodeFileLoader      from '../logic/node-file-loader';
+import FetchFileLoader     from '../logic/fetch-file-loader';
 
-export function loopManager() {
-    return new MainLoopLoopManager();
-}
+import ThreeRendererManager from '../view/three-renderer-manager';
 
-export function fileLoader() {
-    return typeof window === 'undefined' ? new NodeFileLoader() : new FetchFileLoader();
-}
+const loopManager     = () => new MainLoopLoopManager();
+const fileLoader      = () => typeof window === 'undefined' ? new NodeFileLoader() : new FetchFileLoader();
+const rendererManager = () => new ThreeRendererManager();
+
+export { loopManager, fileLoader, rendererManager };

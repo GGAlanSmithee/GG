@@ -1,8 +1,10 @@
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory() :
-  typeof define === 'function' && define.amd ? define('Test', factory) :
-  (factory());
-}(this, function () { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(require('three')) :
+  typeof define === 'function' && define.amd ? define('client.js', ['three'], factory) :
+  (factory(global.THREE));
+}(this, function (three) { 'use strict';
+
+  three = 'default' in three ? three['default'] : three;
 
   var __commonjs_global = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : this;
   function __commonjs(fn, module) { return module = { exports: {} }, fn(module, module.exports, __commonjs_global), module.exports; }
@@ -1174,29 +1176,43 @@
       return FileLoader;
   }();
 
-  function loopManager() {
-      return new MainLoopLoopManager();
-  }
+  var ThreeRendererManager = function () {
+      function ThreeRendererManager() {
+          babelHelpers.classCallCheck(this, ThreeRendererManager);
+
+          this.renderer = new three.WebGLRenderer({ antialias: true });
+          this.camera = new three.PerspectiveCamera();
+
+          this.renderer.setSize(window.innerWidth, window.innerHeight);
+
+          document.body.appendChild(this.renderer.domElement);
+
+          this.camera.position.y = 20;
+          this.camera.position.z = 20;
+
+          this.camera.lookAt(new three.Vector3(0.0, 0.0, 0.0));
+      }
+
+      babelHelpers.createClass(ThreeRendererManager, [{
+          key: 'render',
+          value: function render(scene, interpolationPercentage) {
+              this.renderer.render(scene, this.camera);
+          }
+      }]);
+      return ThreeRendererManager;
+  }();
+
+  var loopManager = function loopManager() {
+    return new MainLoopLoopManager();
+  };
 
   var GG = function () {
-      function GG() {
-          var _ref = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
-
-          var _ref$components = _ref.components;
-          var components = _ref$components === undefined ? 'components' : _ref$components;
-          var _ref$systems = _ref.systems;
-          var systems = _ref$systems === undefined ? 'systems' : _ref$systems;
-          var _ref$entities = _ref.entities;
-          var entities = _ref$entities === undefined ? 'entities' : _ref$entities;
+      function GG(platform) {
           babelHelpers.classCallCheck(this, GG);
-
-          this.components = components;
-          this.systems = systems;
-          this.entities = entities;
 
           this.entityManager = new EntityManager();
 
-          console.log(components, systems, entities);
+          console.log(platform);
       }
 
       babelHelpers.createClass(GG, [{
@@ -1275,7 +1291,7 @@
       }
   })
 
-  var gg = new GG();
+  var gg = new GG('browser');
 
   gg.entityManager.registerComponent(test);
 

@@ -2,10 +2,10 @@
 
 var fs = require('fs');
 
-module.exports.getHeader = () => 
+module.exports.getHeader = platform => 
 `import GG from '../src/gg';
 
-const gg = new GG();
+const gg = new GG('${platform}');
 
 `;
 
