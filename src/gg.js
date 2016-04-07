@@ -5,10 +5,10 @@ import { EntityManager } from 'gg-entities';
 import * as DI from './DI';
 
 export default class GG {
-    constructor(platform) {
+    constructor(di) {
         this.entityManager = new EntityManager();
         
-        console.log(platform);
+        console.log(di);
     }
     
     start() {
@@ -20,7 +20,8 @@ export default class GG {
         
         const loopManager = DI.loopManager();
         
-        loopManager.setUpdate(delta => this.entityManager.onLogic(delta));
+        //loopManager.setUpdate(delta => this.entityManager.onLogic(delta));
+        loopManager.setUpdate(delta => { });
         loopManager.setRender(interpolationPercentage => { });
         loopManager.start();
     }

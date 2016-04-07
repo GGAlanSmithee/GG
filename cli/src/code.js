@@ -3,9 +3,10 @@
 var fs = require('fs');
 
 module.exports.getHeader = platform => 
-`import GG from '../src/gg';
+`import DI from '../src/DI/${platform}';
+import GG from '../src/gg';
 
-const gg = new GG('${platform}');
+const gg = new GG(DI);
 
 `;
 

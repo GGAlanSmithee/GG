@@ -93,6 +93,8 @@ require('babel-polyfill');
 
   babelHelpers;
 
+  var DI = 'this is node';
+
   var ComponentManager = function () {
       function ComponentManager() {
           babelHelpers.classCallCheck(this, ComponentManager);
@@ -1209,19 +1211,17 @@ require('babel-polyfill');
   };
 
   var GG = function () {
-      function GG(platform) {
+      function GG(di) {
           babelHelpers.classCallCheck(this, GG);
 
           this.entityManager = new EntityManager();
 
-          console.log(platform);
+          console.log(di);
       }
 
       babelHelpers.createClass(GG, [{
           key: 'start',
           value: function start() {
-              var _this = this;
-
               // const fileLoader = DI.fileLoader();
 
               // fileLoader.get(path).then(res => {
@@ -1230,9 +1230,8 @@ require('babel-polyfill');
 
               var loopManager$$ = loopManager();
 
-              loopManager$$.setUpdate(function (delta) {
-                  return _this.entityManager.onLogic(delta);
-              });
+              //loopManager.setUpdate(delta => this.entityManager.onLogic(delta));
+              loopManager$$.setUpdate(function (delta) {});
               loopManager$$.setRender(function (interpolationPercentage) {});
               loopManager$$.start();
           }
@@ -1293,7 +1292,7 @@ require('babel-polyfill');
       }
   })
 
-  var gg = new GG('node');
+  var gg = new GG(DI);
 
   gg.entityManager.registerComponent(test);
 
