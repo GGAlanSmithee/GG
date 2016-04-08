@@ -30,6 +30,7 @@ module.exports.run = function(output, platform) {
         bundle.write({
             dest: output,
             format: 'umd',
+            sourceMap: 'inline',
             moduleId: output,
             moduleName: output,
             globals: {

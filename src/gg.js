@@ -2,13 +2,11 @@
 
 import { EntityManager } from 'gg-entities';
 
-import * as DI from './DI';
-
 export default class GG {
     constructor(di) {
         this.entityManager = new EntityManager();
         
-        console.log(di);
+        this.di = di;
     }
     
     start() {
@@ -18,11 +16,13 @@ export default class GG {
         //     console.log(res);
         // });
         
-        const loopManager = DI.loopManager();
+        const loopManager     = this.di.loopManager();
+        const rendererManager = this.di.rendererManager();
         
-        //loopManager.setUpdate(delta => this.entityManager.onLogic(delta));
-        loopManager.setUpdate(delta => { });
-        loopManager.setRender(interpolationPercentage => { });
+        loopManager.setUpdate(delta => this.entityManager.onLogic(delta));
+        
+        loopManager.setRender(interpolationPercentage => this.entityManager.onRender(interpolationPercentage, { rendererManager }));
+        
         loopManager.start();
     }
 }

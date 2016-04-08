@@ -3,7 +3,8 @@
 var fs = require('fs');
 
 module.exports.getHeader = platform => 
-`import DI from '../src/DI/${platform}';
+`import * as DI from '../src/DI/${platform}';
+
 import GG from '../src/gg';
 
 const gg = new GG(DI);
@@ -46,7 +47,7 @@ module.exports.getSystemsSection = systemsUrl => {
             name = name.substring(0, name.indexOf('.'));
             
             code += `import ${name} from '${process.cwd()}/${renderFolderUrl}/${name}';\n`;
-            code += `gg.entityManager.registerLogicSystem(0, 0, ${name});\n\n`;
+            code += `gg.entityManager.registerRenderSystem(0, 0, ${name});\n\n`;
         });
     }
     
