@@ -35,8 +35,8 @@ module.exports.getSystemsSection = systemsUrl => {
         fs.readdirSync(logicFolderUrl).forEach(name => {
             name = name.substring(0, name.indexOf('.'));
             
-            code += `import ${name}, { Selector as ${name}Selector } from '${process.cwd()}/${logicFolderUrl}/${name}';\n`;
-            code += `gg.entityManager.registerLogicSystem(${name}Selector, 0, ${name});\n\n`;
+            code += `import ${name}, { Selector as ${name}Selector, Components as ${name}Components } from '${process.cwd()}/${logicFolderUrl}/${name}';\n`;
+            code += `gg.entityManager.registerLogicSystem(${name}Selector, ${name}Components, ${name});\n\n`;
         });
     }
     
@@ -46,8 +46,8 @@ module.exports.getSystemsSection = systemsUrl => {
         fs.readdirSync(renderFolderUrl).forEach(name => {
             name = name.substring(0, name.indexOf('.'));
             
-            code += `import ${name}, { Selector as ${name}Selector } from '${process.cwd()}/${renderFolderUrl}/${name}';\n`;
-            code += `gg.entityManager.registerRenderSystem(${name}Selector, 0, ${name});\n\n`;
+            code += `import ${name}, { Selector as ${name}Selector, Components as ${name}Components } from '${process.cwd()}/${renderFolderUrl}/${name}';\n`;
+            code += `gg.entityManager.registerRenderSystem(${name}Selector, ${name}Components, ${name});\n\n`;
         });
     }
     
