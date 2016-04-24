@@ -4,18 +4,18 @@ var config;
 var output;
 var platform;
 
+const defaultConfig = {
+    components: 'components',
+    systems: 'systems',
+    entities: 'entities'
+};
+
 module.exports.run = function() {
     program.arguments('<file>')
            .option('-c, --config <config>', 'The config file used to initialize the GG engine.')
            .option('-o, --output <output>', 'The output filename.')
-           .option('-p, --platform <platform>', 'The output platform.')
+           .option('-p, --platform <platform>', 'The output platform [ browser or node ].')
            .parse(process.argv);
-
-    const defaultConfig = {
-        components: 'components',
-        systems: 'systems',
-        entities: 'entities'
-    };
 
     config   = Object.assign({}, defaultConfig, require(`${process.cwd()}/${program.config}`));
     output   = program.output;

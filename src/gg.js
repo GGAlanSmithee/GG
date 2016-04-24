@@ -1,6 +1,6 @@
 /* @flow */
 
-import { EntityManager } from 'gg-entities';
+import EntityManager from 'gg-entities';
 
 export default class GG {
     constructor(di) {
@@ -10,18 +10,17 @@ export default class GG {
     }
     
     start() {
-        // const fileLoader = DI.fileLoader();
-        
-        // fileLoader.get(path).then(res => {
-        //     console.log(res);
-        // });
-        
         const loopManager     = this.di.loopManager();
         const rendererManager = this.di.rendererManager();
         
+        this.entityManager.onInit({ rendererManager });
+        
         loopManager.setUpdate(delta => this.entityManager.onLogic(delta));
         
-        loopManager.setRender(interpolationPercentage => this.entityManager.onRender(interpolationPercentage, { rendererManager }));
+        loopManager.setRender(interpolationPercentage => {
+            this.entityManager.onRender({ delta : interpolationPercentage, rendererManager });
+            rendererManager.render(interpolationPercentage);
+        });
         
         loopManager.start();
     }

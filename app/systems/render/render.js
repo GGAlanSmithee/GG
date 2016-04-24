@@ -1,15 +1,5 @@
-import { SelectorType } from 'gg-entities';
+export const Components = [ 'transform', 'appearance' ];
 
-import TransformComponent from '../../special/transform.json';
-import AppearanceComponent from '../../special/appearance.json';
+export default (entities) => {
 
-export const Selector   = SelectorType.GetWith;
-export const Components = TransformComponent | AppearanceComponent;
-
-export default (entities, delta, opts) => {
-    console.log(Selector, opts);
-    
-    for (var entity of entities) {
-        console.log(entity);
-    }
 };

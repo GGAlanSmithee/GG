@@ -13,9 +13,9 @@ var codeGenerator = require('./src/code');
 var platform = program.getPlatform();
 
 var code = codeGenerator.getHeader(platform) +
-           codeGenerator.getComponentsSection(config.components) +
-           codeGenerator.getSystemsSection(config.systems) +
-           codeGenerator.getFooter();
+          codeGenerator.getComponentsSection(config.components) +
+          codeGenerator.getSystemsSection(config.systems) +
+          codeGenerator.getFooter();
 
 var output = program.getOutput();
 

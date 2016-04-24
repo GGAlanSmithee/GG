@@ -20,7 +20,7 @@ module.exports.getComponentsSection = componentsUrl => {
         const strippedName = name.substring(0, name.indexOf('.'));
         
         code += `import ${strippedName} from '${process.cwd()}/${componentsUrl}/${name}';\n`;
-        code += `gg.entityManager.registerComponent(${strippedName});\n\n`;
+        code += `gg.entityManager.registerComponent('${strippedName}', ${strippedName});\n\n`;
     });
     
     return code;
@@ -29,14 +29,25 @@ module.exports.getComponentsSection = componentsUrl => {
 module.exports.getSystemsSection = systemsUrl => {
     let code = '';
     
+    const initFolderUrl = `${systemsUrl}/init`;
+    
+    if (fs.existsSync(initFolderUrl)) {
+        fs.readdirSync(initFolderUrl).forEach(name => {
+            name = name.substring(0, name.indexOf('.'));
+            
+            code += `import ${name}, { Components as ${name}Components } from '${process.cwd()}/${initFolderUrl}/${name}';\n`;
+            code += `gg.entityManager.registerInitSystem('${name}', ${name}Components, ${name});\n\n`;
+        });
+    }
+    
     const logicFolderUrl = `${systemsUrl}/logic`;
     
     if (fs.existsSync(logicFolderUrl)) {
         fs.readdirSync(logicFolderUrl).forEach(name => {
             name = name.substring(0, name.indexOf('.'));
             
-            code += `import ${name}, { Selector as ${name}Selector, Components as ${name}Components } from '${process.cwd()}/${logicFolderUrl}/${name}';\n`;
-            code += `gg.entityManager.registerLogicSystem(${name}Selector, ${name}Components, ${name});\n\n`;
+            code += `import ${name}, { Components as ${name}Components } from '${process.cwd()}/${logicFolderUrl}/${name}';\n`;
+            code += `gg.entityManager.registerLogicSystem('${name}', ${name}Components, ${name});\n\n`;
         });
     }
     
@@ -46,8 +57,8 @@ module.exports.getSystemsSection = systemsUrl => {
         fs.readdirSync(renderFolderUrl).forEach(name => {
             name = name.substring(0, name.indexOf('.'));
             
-            code += `import ${name}, { Selector as ${name}Selector, Components as ${name}Components } from '${process.cwd()}/${renderFolderUrl}/${name}';\n`;
-            code += `gg.entityManager.registerRenderSystem(${name}Selector, ${name}Components, ${name});\n\n`;
+            code += `import ${name}, { Components as ${name}Components } from '${process.cwd()}/${renderFolderUrl}/${name}';\n`;
+            code += `gg.entityManager.registerRenderSystem('${name}', ${name}Components, ${name});\n\n`;
         });
     }
     
