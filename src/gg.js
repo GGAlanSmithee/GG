@@ -9,6 +9,16 @@ export default class GG {
         this.di = di;
     }
     
+    registerEntityConfiguration(key, entity) {
+        this.entityManager.build()
+        
+        for (let component of entity.components) {
+            this.entityManager.withComponent(component)
+        }
+        
+        this.entityManager.registerConfiguration(key)
+    }
+    
     start() {
         const loopManager     = this.di.loopManager();
         const rendererManager = this.di.rendererManager();

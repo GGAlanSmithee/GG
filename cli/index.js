@@ -1,24 +1,27 @@
 #!/usr/bin/env node
 
-var program = require('./src/program');
+const program = require('./src/program')
 
-program.run();
+program.run()
 
-var config = program.getConfig();
+const config = program.getConfig()
 
-var fs = require('fs');
+const fs = require('fs')
 
-var codeGenerator = require('./src/code');
+const codeGenerator = require('./src/code')
 
-var platform = program.getPlatform();
+const platform = program.getPlatform()
 
-var code = codeGenerator.getHeader(platform) +
-          codeGenerator.getComponentsSection(config.components) +
-          codeGenerator.getSystemsSection(config.systems) +
-          codeGenerator.getFooter();
+const code = (
+    codeGenerator.getHeader(platform) +
+    codeGenerator.getComponentsSection(config.components) +
+    codeGenerator.getSystemsSection(config.systems) +
+    codeGenerator.getEntitiesSection(config.systems) +
+    codeGenerator.getFooter()
+)
 
-var output = program.getOutput();
+const output = program.getOutput()
 
-fs.writeFileSync(output, code);
+fs.writeFileSync(output, code)
 
-require('./src/bundle').run(output, program.getPlatform());
+require('./src/bundle').run(output, program.getPlatform())
