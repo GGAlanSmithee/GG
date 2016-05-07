@@ -56,9 +56,9 @@ export default class ThreeRendererManager {
         var mat = this.materials.get(material);
         var mesh = new three.Mesh(geo, mat);
         
-        console.log('adding mesh!', geo, mat, mesh);
-        
         this.scene.add(mesh);
+        
+        return mesh;
     }
     
     render(interpolationPercentage : number) : void {
