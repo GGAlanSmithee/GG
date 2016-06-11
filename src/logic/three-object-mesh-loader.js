@@ -13,6 +13,10 @@ export default class ThreeObjectMeshLoader {
         // placeholder
     }
     
+    parse(json) {
+        return this.loader.parse(json)
+    }
+    
     // todo this now returns a scene.. implications?
     // todo add options as a destructable object -> stopped by flow: https://github.com/facebook/flow/issues/183
     load(path : string, options? : Object) : Promise {

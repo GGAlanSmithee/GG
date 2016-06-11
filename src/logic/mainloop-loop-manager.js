@@ -1,21 +1,26 @@
 /* @flow */
 
-import MainLoop from 'mainloop.js';
+import MainLoop from 'mainloop.js'
 
 export default class MainLoopLoopManager {
-    setUpdate(updateMethod : (delta : number) => void) : MainLoopLoopManager {
-        MainLoop.setUpdate(updateMethod);
+    // setUpdate(updateMethod : (delta : number) => void) : MainLoopLoopManager {
+    setUpdate(updateMethod) {
+        MainLoop.setUpdate(updateMethod)
         
-        return this;
+        return this
     }
     
     setRender(renderMethod : (interpolationPercentage : number) => void) : MainLoopLoopManager {
-        MainLoop.setDraw(renderMethod);
+        MainLoop.setDraw(renderMethod)
         
-        return this;
+        return this
     }
     
     start() : void {
-        MainLoop.start();
+        MainLoop.start()
+    }
+    
+    stop() : void {
+        MainLoop.stop()
     }
 }

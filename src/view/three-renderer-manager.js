@@ -5,38 +5,46 @@ import three from 'three';
 export default class ThreeRendererManager {
     renderer     : three.WebGLRenderer;
     camera       : three.Camera;
-    geometries   : Map<string, three.Geometry>;
-    materials    : Map<string, three.Material>;
+    // geometries   : Map<string, three.Geometry>;
+    // materials    : Map<string, three.Material>;
     
     constructor() {
-        this.geometries = new Map();
-        this.materials = new Map();
-        
         this.renderer = new three.WebGLRenderer({ antialias : true });
-        this.camera   = new three.PerspectiveCamera();
-        
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
-        
-        document.body.appendChild(this.renderer.domElement);
-        
-        this.camera.position.y = 40;
-        this.camera.position.z = 40;
-        
-        this.camera.lookAt(new three.Vector3(0.0, 0.0, 0.0));
-        
-        this.scene = new three.Scene();
-
-        this.scene.add( new three.AmbientLight( 0x404040 ) );
-        
-        var directionalLight = new THREE.DirectionalLight( 0xdd3333, 1.5 );
-		directionalLight.position.set( 1, 1, 1 ).normalize();
-        
-        this.scene.add( directionalLight );
-
-        this.geometries.set('cylinder', new three.CylinderGeometry( 5, 5, 20, 32 ));
-        this.materials.set('phong', new THREE.MeshPhongMaterial( { color: 0xdddddd, specular: 0x009900, shininess: 30, shading: THREE.FlatShading } ));
-        
-        this.renderer.render(this.scene, this.camera);
+		this.renderer.setClearColor( 0x000000 );
+		this.renderer.setPixelRatio( window.devicePixelRatio );
+    }
+    
+    enableShadows() {
+        this.renderer.shadowMap.enabled = true
+    }
+    
+    isFullScreen() {
+        return this.renderer._fullScreen
+    }
+    
+    //todo make into getter / setter ?
+    setScene(scene) {
+        this.scene = scene
+    }
+    
+    setCamera(camera, width, height) {
+        this.camera = camera
+    }
+    
+    setSize(width, height) {
+        if (!this.isFullScreen()) {
+		    this.camera.aspect = (width || 500) / (height || 500)
+    	}
+		
+		this.camera.updateProjectionMatrix()
+		
+		if (!this.isFullScreen()) {
+	        this.renderer.setSize(width || 500, height || 500)
+		}
+    }
+    
+    getDom() {
+        return this.renderer.domElement
     }
     
     getScene() : three.Scene {
