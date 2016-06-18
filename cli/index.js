@@ -7,21 +7,20 @@ program.run()
 const config = program.getConfig()
 
 const fs = require('fs')
+const path = require('path')
 
-const codeGenerator = require('./src/code')
+const generateCode = require('./src/code')
 
 const platform = program.getPlatform()
+const output = program.getOutput()
+const directory = program.getDirectory()
 
-const code = (
-    codeGenerator.getHeader(platform) +
-    codeGenerator.getComponentsSection(config.components) +
-    codeGenerator.getSystemsSection(config.systems) +
-    codeGenerator.getEntitiesSection(config.systems) +
-    codeGenerator.getFooter()
+fs.writeFileSync(
+    directory + '/' + output,
+    generateCode(platform, directory, config.components, config.systems, config.entities)
 )
 
-const output = program.getOutput()
+console.log(path.join(process.cwd(), directory, output))
+console.log(process.cwd(), directory + '/' + output)
 
-fs.writeFileSync(output, code)
-
-require('./src/bundle').run(output, program.getPlatform())
+// require('./src/bundle').run(path.join(process.cwd(), directory, output), program.getPlatform())

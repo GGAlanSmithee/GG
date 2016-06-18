@@ -21,7 +21,7 @@ module.exports.run = function(output, platform) {
             babel({
                 babelrc: false,
                 presets: [ 'es2015-rollup' ],
-                plugins: [ 'transform-async-to-generator', 'transform-flow-strip-types', 'transform-class-properties' ],
+                // plugins: [ 'transform-async-to-generator', 'transform-flow-strip-types', 'transform-class-properties' ],
                 exclude: 'node_modules/three/**',
             })
         ]

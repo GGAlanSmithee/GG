@@ -1,6 +1,6 @@
 /*global THREE*/
 /*global UI*/
-/*global GG*/
+/*global GGFactory*/
 
 const Player = function(editor) {
 	const signals = editor.signals
@@ -10,7 +10,7 @@ const Player = function(editor) {
 	container.setPosition('absolute')
 	container.setDisplay('none')
 
-	const player = new GG()
+	const player = GGFactory.Create()
 
 	window.addEventListener('resize', () => {
 		player.setSize(container.dom.clientWidth, container.dom.clientHeight)

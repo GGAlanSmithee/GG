@@ -3,9 +3,6 @@
   "version": "0.0.1",
   "description": "a cli tool for the GG engine",
   "main": "index.js",
-  "scripts": {
-    "test": "test"
-  },
   "keywords": [
     "js",
     "nodejs",
@@ -19,7 +16,9 @@
     "gg": "./index.js"
   },
   "dependencies": {
-    "commander": "^2.9.0"
+    "commander": "^2.9.0",
+    "rollup": "^0.31.2",
+    "rollup-plugin-commonjs": "^3.0.0"
   },
   "devDependencies": {
     "babel-plugin-transform-async-to-generator": "^6.7.4",

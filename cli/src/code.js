@@ -2,79 +2,33 @@
 
 const fs = require('fs')
 
-module.exports.getHeader = platform =>  (
-`import * as DI from '../src/DI/${platform}'
+const stripName = name => name.substring(0, name.indexOf('.')).replace('-', '')
 
-import GG from '../src/gg'
+module.exports = function(platform, url, comp, sys, ent) {
+    //todo require gg from npm package when released
+    // `import GG from 'gg'
+    //  import DI from 'gg/src/DI/${platform}'
+    return (
+`import GG from './gg'
 
-const gg = new GG(DI)
+${fs.readdirSync(`${url}/${comp}`).map(name => `import ${stripName(name)} from '${process.cwd()}/${url}/${comp}/${name}'`).join('\n')}
+${fs.readdirSync(`${url}/${sys}/init`).map(name => `import ${stripName(name)}, { Components as ${stripName(name)}Components } from '${process.cwd()}/${url}/${sys}/init/${name}'`).join('\n')}
+${fs.readdirSync(`${url}/${sys}/logic`).map(name => `import ${stripName(name)}, { Components as ${stripName(name)}Components } from '${process.cwd()}/${url}/${sys}/logic/${name}'`).join('\n')}
+${fs.readdirSync(`${url}/${sys}/render`).map(name => `import ${stripName(name)}, { Components as ${stripName(name)}Components } from '${process.cwd()}/${url}/${sys}/render/${name}'`).join('\n')}
 
+export default () => {
+    const gg = new GG()
+    
+${fs.readdirSync(`${url}/${comp}`).map(name => `    gg.entityManager.registerComponent('${stripName(name)}', ${stripName(name)})`).join('\n')}
+
+${fs.readdirSync(`${url}/${sys}/init`).map(name => `    gg.entityManager.registerInitSystem('${stripName(name)}', ${stripName(name)}Components, ${stripName(name)})`).join('\n')}
+
+${fs.readdirSync(`${url}/${sys}/logic`).map(name => `    gg.entityManager.registerLogicSystem('${stripName(name)}', ${stripName(name)}Components, ${stripName(name)})`).join('\n')}
+
+${fs.readdirSync(`${url}/${sys}/render`).map(name => `    gg.entityManager.registerRenderSystem('${stripName(name)}', ${stripName(name)}Components, ${stripName(name)})`).join('\n')}
+
+    return gg
+}
 `
-)
-
-module.exports.getFooter = () => `gg.start()`
-
-module.exports.getComponentsSection = (componentsUrl = 'components') => {
-    let code = ''
-    
-    fs.readdirSync(componentsUrl).forEach(name => {
-        const strippedName = name.substring(0, name.indexOf('.')).replace('-', '')
-        
-        code += `import ${strippedName} from '${process.cwd()}/${componentsUrl}/${name}'\n`
-        code += `gg.entityManager.registerComponent('${strippedName}', ${strippedName})\n\n`
-    })
-    
-    return code
-}
-
-module.exports.getSystemsSection = (systemsUrl = 'systems') => {
-    let code = ''
-    
-    const initFolderUrl = `${systemsUrl}/init`
-    
-    if (fs.existsSync(initFolderUrl)) {
-        fs.readdirSync(initFolderUrl).forEach(name => {
-            const strippedName = name.substring(0, name.indexOf('.')).replace('-', '')
-            
-            code += `import ${strippedName}, { Components as ${strippedName}Components } from '${process.cwd()}/${initFolderUrl}/${name}'\n`
-            code += `gg.entityManager.registerInitSystem('${strippedName}', ${strippedName}Components, ${strippedName})\n\n`
-        })
-    }
-    
-    const logicFolderUrl = `${systemsUrl}/logic`
-    
-    if (fs.existsSync(logicFolderUrl)) {
-        fs.readdirSync(logicFolderUrl).forEach(name => {
-            const strippedName = name.substring(0, name.indexOf('.')).replace('-', '')
-            
-            code += `import ${strippedName}, { Components as ${strippedName}Components } from '${process.cwd()}/${logicFolderUrl}/${name}'\n`
-            code += `gg.entityManager.registerLogicSystem('${strippedName}', ${strippedName}Components, ${strippedName})\n\n`
-        })
-    }
-    
-    const renderFolderUrl = `${systemsUrl}/render`
-    
-    if (fs.existsSync(renderFolderUrl)) {
-        fs.readdirSync(renderFolderUrl).forEach(name => {
-            const strippedName = name.substring(0, name.indexOf('.')).replace('-', '')
-            
-            code += `import ${strippedName}, { Components as ${strippedName}Components } from '${process.cwd()}/${renderFolderUrl}/${name}'\n`
-            code += `gg.entityManager.registerRenderSystem('${strippedName}', ${strippedName}Components, ${strippedName})\n\n`
-        })
-    }
-    
-    return code
-}
-
-module.exports.getEntitiesSection = (entitiesUrl = 'entities') => {
-    let code = ''
-    
-    fs.readdirSync(entitiesUrl).forEach(name => {
-        const strippedName = name.substring(0, name.indexOf('.')).replace('-', '')
-        
-        code += `import ${strippedName} from '${process.cwd()}/${entitiesUrl}/${name}'\n`
-        code += `gg.registerEntityConfiguration('${strippedName}', ${strippedName})\n\n`
-    })
-    
-    return code
+    )
 }

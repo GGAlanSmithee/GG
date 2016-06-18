@@ -1,3 +1,4 @@
+const fs = require('fs')
 const path = require('path')
 const webpack = require('webpack')
 
@@ -21,7 +22,12 @@ const appConfig = {
         publicPath: '/',
         sourcePrefix: '  ',
         path: path.join(__dirname, '/public'),
-        filename: 'bundle.js'
+        filename: 'bundle.js',
+        library: "GGFactory",
+        libraryTarget: "umd"
+    },
+    externals: {
+        "three": "THREE"
     },
     devtool: 'cheap-module-eval-source-map',
     plugins: [
@@ -31,11 +37,26 @@ const appConfig = {
         new webpack.NoErrorsPlugin()
     ],
     module: {
+        
         loaders: [{
-            test: /\.js?$/,
-            include: path.join(__dirname, './app'),
-            loaders: ['babel']
-        }]
+            resolveLoader: { root: path.join(__dirname, "..") },
+            test: /\.js?$/, 
+            include: [
+                path.join(__dirname, '../engine'),
+                path.join(__dirname, '../../engine'),
+                path.join(__dirname, '../../../engine'),
+                path.join(__dirname, '../engine/src'),
+                path.join(__dirname, '../../engine/src'),
+                path.join(__dirname, '../../../engine/src'),
+                path.join(__dirname, './app')
+            ],
+            // include: [
+            //     path.join(__dirname, './app'),
+            //     // path.join(__dirname, '../engine/src')
+            // ],
+            loader: 'babel'},
+            {test: /\.json$/, include: path.join(__dirname, './app'), loader: 'json'}
+        ]
     }
 }
 
