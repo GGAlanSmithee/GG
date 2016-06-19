@@ -4,7 +4,10 @@
         <title>Editor</title>
         <meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-    </head>
+		
+		<link rel="stylesheet" href="script.css" type="text/css" />
+	</head>
+    
     <body ontouchstart="">
 		<link href="editor/css/main.css" rel="stylesheet" />
 		<link id="theme" href="editor/css/light.css" rel="stylesheet" />
@@ -93,7 +96,6 @@
 		<script src="editor/js/Sidebar.Geometry.LatheGeometry.js"></script>
 		<script src="editor/js/Sidebar.Material.js"></script>
 		<script src="editor/js/Sidebar.Animation.js"></script>
-		<script src="editor/js/Sidebar.Script.js"></script>
 		<script src="editor/js/Sidebar.History.js"></script>
 		<script src="editor/js/Toolbar.js"></script>
 		<script src="editor/js/Viewport.js"></script>
@@ -111,9 +113,6 @@
 		<script src="editor/js/commands/SetColorCommand.js"></script>
 		<script src="editor/js/commands/SetGeometryCommand.js"></script>
 		<script src="editor/js/commands/SetGeometryValueCommand.js"></script>
-		<script src="editor/js/commands/MultiCmdsCommand.js"></script>
-		<script src="editor/js/commands/AddScriptCommand.js"></script>
-		<script src="editor/js/commands/RemoveScriptCommand.js"></script>
 		<script src="editor/js/commands/SetScriptValueCommand.js"></script>
 		<script src="editor/js/commands/SetMaterialCommand.js"></script>
 		<script src="editor/js/commands/SetMaterialValueCommand.js"></script>
@@ -121,7 +120,9 @@
 		<script src="editor/js/commands/SetMaterialMapCommand.js"></script>
 		<script src="editor/js/commands/SetSceneCommand.js"></script>
 		
+		<script src="/socket.io/socket.io.js"></script>
 		<script src="player.js"></script>
+		<script src="script.js"></script>
 		
 		<script>
 			window.URL = window.URL || window.webkitURL;
@@ -153,6 +154,10 @@
 			var sidebar = new Sidebar( editor );
 			document.body.appendChild( sidebar.dom );
 
+			var scriptSidebar = new ScriptSidebar( editor );
+			console.log(scriptSidebar.dom)
+			document.body.appendChild( scriptSidebar.dom );
+			
 			var modal = new UI.Modal();
 			document.body.appendChild( modal.dom );
 

@@ -25,19 +25,23 @@ app.use(webpackDevMiddleware(compiler, { noInfo: true, lazy: false, hot: true, p
 app.use(webpackHotMiddleware(compiler))
 
 app.get('/', (req, res) => {
-    exec('gg -p browser -d app/src -o index.js', (err, stdout, stderr) => {
-        if (err) {
-            console.warn(err)
-        } else {
-            console.log('generated app')
-        }
-    })
+    
                     
     res.sendFile(path.join(__dirname, `index.html`))
 })
 
 io.on('connection', socket => {
-    fs.readdir(appSrcPath, (err, files) => socket.emit('connected', files))
+    fs.readdir(path.join(appSrcPath, 'components'), (err, files) => socket.emit('connected', files))
+    
+    socket.on('fetch files', section => {
+        fs.readdir(path.join(appSrcPath, section), (err, files) => {
+            if (err) {
+                throw err
+            }
+            
+            socket.emit('files fetched', section, files)
+        })
+    })
     
     socket.on('fetch file', (name) => {
         fs.readFile(`${appSrcPath}${name}`, 'utf8', (err, file) => {
@@ -58,7 +62,7 @@ io.on('connection', socket => {
                 
                 // rebundle if the file is a new one
                 if (fileIsNew) {
-                    exec('gg -p browser -o app/test-app.js', (err, stdout, stderr) => {
+                    exec('gg -p browser -d app/src -o index.js', (err, stdout, stderr) => {
                         if (err) {
                             console.warn(err)
                         } else {
