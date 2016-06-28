@@ -12,6 +12,7 @@
 		<link href="editor/css/main.css" rel="stylesheet" />
 		<link id="theme" href="editor/css/light.css" rel="stylesheet" />
         
+        
         <script type="text/javascript" src="browser.js"></script>
         <script type="text/javascript" src="build/three.js"></script>
         <script type="text/javascript" src="bundle.js"></script>
@@ -120,6 +121,7 @@
 		<script src="editor/js/commands/SetMaterialMapCommand.js"></script>
 		<script src="editor/js/commands/SetSceneCommand.js"></script>
 		
+		<script src="ace.js" type="text/javascript" charset="utf-8"></script>
 		<script src="/socket.io/socket.io.js"></script>
 		<script src="player.js"></script>
 		<script src="script.js"></script>
@@ -134,14 +136,12 @@
 
 			//
 
-			var editor = new Editor();
+			var editor = new Editor()
 
-			var viewport = new Viewport( editor );
-			document.body.appendChild( viewport.dom );
+			var viewport = new Viewport( editor )
+			document.body.appendChild( viewport.dom )
 
-			// var script = new Script( editor );
-			// document.body.appendChild( script.dom );
-
+			
 			var player = new Player( editor );
 			document.body.appendChild( player.dom );
 
@@ -155,7 +155,6 @@
 			document.body.appendChild( sidebar.dom );
 
 			var scriptSidebar = new ScriptSidebar( editor );
-			console.log(scriptSidebar.dom)
 			document.body.appendChild( scriptSidebar.dom );
 			
 			var modal = new UI.Modal();
@@ -358,7 +357,6 @@
 
 			}, false );
 			*/
-
 		</script>
     </body>
 </html>

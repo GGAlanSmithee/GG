@@ -15,10 +15,12 @@ const io = require('socket.io')(server)
 const publicPath = path.join(__dirname + '/public')
 const appSrcPath = path.join(__dirname + '/app/src/')
 const distPath = path.join(__dirname + '/../dist/')
+const acePath = path.join(__dirname + '/ace/src')
 const threePath = path.join(__dirname + '/three')
 const compiler = webpack(appConfig)
 
 app.use(express.static(threePath))
+app.use(express.static(acePath))
 app.use(express.static(distPath))
 app.use(express.static(publicPath))
 app.use(webpackDevMiddleware(compiler, { noInfo: true, lazy: false, hot: true, publicPath: appConfig.output.publicPath }))
@@ -43,8 +45,8 @@ io.on('connection', socket => {
         })
     })
     
-    socket.on('fetch file', (name) => {
-        fs.readFile(`${appSrcPath}${name}`, 'utf8', (err, file) => {
+    socket.on('fetch file', (section, name) => {
+        fs.readFile(path.join(appSrcPath, section, name), 'utf8', (err, file) => {
             if (err) {
                 throw err
             }
@@ -53,9 +55,9 @@ io.on('connection', socket => {
         })
     })
     
-    socket.on('save file', (name, data) => {
+    socket.on('save file', (section, name, data) => {
         fs.stat(name, fileIsNew => {
-            fs.writeFile(`${appSrcPath}${name}`, data, err => {
+            fs.writeFile(path.join(appSrcPath, section, name), data, err => {
                 if (err) {
                     throw err
                 }
