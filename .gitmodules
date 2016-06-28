@@ -1,0 +1,6 @@
+[submodule "lib/three"]
+	path = lib/three
+	url = git@github.com:mrdoob/three.js.git
+[submodule "lib/ace"]
+	path = lib/ace
+	url = git@github.com:ajaxorg/ace-builds.git

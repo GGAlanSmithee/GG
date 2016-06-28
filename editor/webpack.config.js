@@ -16,12 +16,12 @@ const appConfig = {
     entry: [
         'webpack/hot/only-dev-server',
         'webpack-hot-middleware/client?overlay=false&reload=true',
-        `${__dirname}/app/main.js`
+        path.join(__dirname, 'app/main.js')
     ],
     output: {
         publicPath: '/',
         sourcePrefix: '  ',
-        path: path.join(__dirname, '/public'),
+        path: path.join(__dirname, 'public'),
         filename: 'bundle.js',
         library: "GGFactory",
         libraryTarget: "umd"
@@ -38,24 +38,9 @@ const appConfig = {
     ],
     module: {
         
-        loaders: [{
-            resolveLoader: { root: path.join(__dirname, "..") },
-            test: /\.js?$/, 
-            include: [
-                path.join(__dirname, '../engine'),
-                path.join(__dirname, '../../engine'),
-                path.join(__dirname, '../../../engine'),
-                path.join(__dirname, '../engine/src'),
-                path.join(__dirname, '../../engine/src'),
-                path.join(__dirname, '../../../engine/src'),
-                path.join(__dirname, './app')
-            ],
-            // include: [
-            //     path.join(__dirname, './app'),
-            //     // path.join(__dirname, '../engine/src')
-            // ],
-            loader: 'babel'},
-            {test: /\.json$/, include: path.join(__dirname, './app'), loader: 'json'}
+        loaders: [
+            {test: /\.js?$/,  include: path.join(__dirname, 'app'), loader: 'babel'},
+            {test: /\.json$/, include: path.join(__dirname, 'app'), loader: 'json'}
         ]
     }
 }
