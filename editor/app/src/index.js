@@ -1,4 +1,4 @@
-import GG from './gg'
+import GG from 'gg'
 
 import appearance from '/home/ubuntu/workspace/editor/app/src/components/appearance.json'
 import transform from '/home/ubuntu/workspace/editor/app/src/components/transform.json'

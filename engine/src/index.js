@@ -18,14 +18,25 @@ export default class GG {
         // this.entityManager.onInit({renderManager: this.rendererManager})
         
         this.loopManager.setUpdate(delta => {
-            // this.entityManager.onLogic(delta)
+            this.entityManager.onLogic(delta)
         }).setRender(interpolationPercentage => {
-            // this.entityManager.onRender({delta : interpolationPercentage, renderManager: this.rendererManager})
+            this.entityManager.onRender({delta : interpolationPercentage, renderManager: this.rendererManager})
             this.rendererManager.render(interpolationPercentage)
         })
     }
     
     registerEntityConfiguration(key, entity) {
+        console.log(key, entity)
+        
+//         const loader = new THREE.ObjectLoader();
+// 		const scene = loader.parse(json.scene)
+		
+// 		console.log(scene.traverse((obj => {
+// 			if (obj.userData) {
+// 				console.log(obj)
+// 			}
+// 		})))
+		
         // this.entityManager.build()
         
         // for (let component of entity.components) {
@@ -35,10 +46,41 @@ export default class GG {
         // this.entityManager.registerConfiguration(key)
     }
     
+    initEntities(parsedScene) {
+        parsedScene.traverse((obj) => {
+		    const {components} = obj.userData
+		    
+			let config = this.entityManager.build()
+			    
+		    config.withComponent('transform', function() {
+		      //  this.x = obj.position.x
+		      //  this.y = obj.position.y
+		      //  this.z = obj.position.z
+	        })
+	        
+	        config.withComponent('appearance', function() {
+		      //  this.obj = obj
+	        })
+	        
+			if (components) {
+			    for (const {key, data} of components) {
+			     //   config.withComponent(key, data)
+		            config.withComponent(key)
+			    }
+			    
+			    obj.userData.entityId = config.create(1)
+			}
+		})
+    }
+    
     load({project, scene, camera}) {
+        console.log('loading...')
+        
         const parsedScene = this.loader.parse(scene)
         const parsedCamera = this.loader.parse(camera)
-        
+		
+		this.initEntities(parsedScene)
+
     	if (project.shadows) {
 			this.rendererManager.enableShadows()
 		}

@@ -1,5 +1,4 @@
-const fs = require('fs')
-const path = require('path')
+const path    = require('path')
 const webpack = require('webpack')
 
 const DEBUG = !process.argv.includes('--release')
@@ -16,18 +15,19 @@ const appConfig = {
     entry: [
         'webpack/hot/only-dev-server',
         'webpack-hot-middleware/client?overlay=false&reload=true',
-        path.join(__dirname, 'app/main.js')
+        path.join(__dirname, 'app')
     ],
     output: {
         publicPath: '/',
         sourcePrefix: '  ',
         path: path.join(__dirname, 'public'),
         filename: 'bundle.js',
-        library: "GGFactory",
-        libraryTarget: "umd"
+        library: 'GGFactory',
+        libraryTarget: 'umd'
     },
     externals: {
-        "three": "THREE"
+        'three': 'THREE',
+        'gg': 'GG'
     },
     devtool: 'cheap-module-eval-source-map',
     plugins: [
@@ -37,7 +37,6 @@ const appConfig = {
         new webpack.NoErrorsPlugin()
     ],
     module: {
-        
         loaders: [
             {test: /\.js?$/,  include: path.join(__dirname, 'app'), loader: 'babel'},
             {test: /\.json$/, include: path.join(__dirname, 'app'), loader: 'json'}

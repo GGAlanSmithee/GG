@@ -5,11 +5,10 @@ const fs = require('fs')
 const stripName = name => name.substring(0, name.indexOf('.')).replace('-', '')
 
 module.exports = function(platform, url, comp, sys, ent) {
-    //todo require gg from npm package when released
-    // `import GG from 'gg'
-    //  import DI from 'gg/src/DI/${platform}'
+    // todo: require dependency injection from gg as a npm package when released
+    // import DI from 'gg/src/DI/${platform}'
     return (
-`import GG from './gg'
+`import GG from 'gg'
 
 ${fs.readdirSync(`${url}/${comp}`).map(name => `import ${stripName(name)} from '${process.cwd()}/${url}/${comp}/${name}'`).join('\n')}
 ${fs.readdirSync(`${url}/${sys}/init`).map(name => `import ${stripName(name)}, { Components as ${stripName(name)}Components } from '${process.cwd()}/${url}/${sys}/init/${name}'`).join('\n')}

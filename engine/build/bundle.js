@@ -1,46 +1,4 @@
-// var rollup = require('rollup')
-// var babel = require('rollup-plugin-babel')
-// var npm = require('rollup-plugin-npm')
-// var commonjs = require('rollup-plugin-commonjs')
-
-// console.log('building...')
-
-// rollup.rollup({
-//     entry: 'src/gg.js',
-//     external: [ 'three' ],
-//     plugins: [
-//         npm({
-//             jsnext: true,
-//             main: true,
-//             skip: 'node_modules/three/three.js'
-//         }),
-//         commonjs({
-//             include: 'node_modules/**'
-//         }),
-//         babel({
-//             babelrc: false,
-//             presets: [ 'es2015-rollup' ],
-//             plugins: [ 'transform-flow-strip-types', 'transform-class-properties' ],
-//             exclude: 'node_modules/**'
-//         })
-//     ]
-// }).then(function(bundle) {
-//     bundle.write({
-//         globals: {
-//             three: 'THREE'
-//         },
-//         dest: 'dist/gg.js',
-//         sourceMap: 'inline',
-//         format: 'umd',
-//         moduleId: 'GG',
-//         moduleName: 'GG'
-//     })
-// }).then(function() {
-//     console.log('build complete!')
-// }).catch(function(err) {
-//     console.warn(err)
-// })
-
+var path = require('path')
 var rollup = require('rollup')
 var babel = require('rollup-plugin-babel')
 var nodeResolve = require('rollup-plugin-node-resolve')
@@ -68,17 +26,21 @@ rollup.rollup({
             extensions: [ '.js', '.json' ]
         })
     ]
-}).then(function(bundle) {
-    bundle.write({
+}).then((bundle) => {
+    
+    const config = {
         globals: {
             three: 'THREE'
         },
-        dest: 'dist/gg.js',
         sourceMap: 'inline',
         format: 'umd',
         moduleId: 'GG',
         moduleName: 'GG'
-    });
+    }
+    
+    // todo remove write to editor public folder after distributed as npm package
+    bundle.write(Object.assign({}, config, {dest: 'dist/gg.js'}))
+    bundle.write(Object.assign({}, config, {dest: path.join(__dirname, '../../editor/public/gg.js')}))
 }).catch(function(error) {
-    console.warn(error);
-});
+    console.warn(error)
+})
