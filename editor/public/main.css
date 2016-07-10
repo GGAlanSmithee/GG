@@ -1,3 +1,7 @@
+#menubar {
+	z-index: 1;
+}
+
 #script-sidebar {
 	position: absolute;
 	left: 0;

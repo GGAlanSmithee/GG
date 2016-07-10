@@ -1,3 +1,4 @@
+/*global UI*/
 import Create from './src'
 
 let startPlayer = null
@@ -42,14 +43,15 @@ const Player = function( editor ) {
 	return container
 }
 
-var player = new Player( window.editor );
-document.body.appendChild( player.dom );
+document.body.appendChild(new Player(window.editor).dom)
 			
 if (module.hot) {
     module.hot.accept()
     
     module.hot.dispose(() => {
-    	window.editor.signals.startPlayer.remove(startPlayer)
-    	window.editor.signals.stopPlayer.remove(stopPlayer)
+    	const {signals} = window.editor
+    	
+    	signals.startPlayer.remove(startPlayer)
+    	signals.stopPlayer.remove(stopPlayer)
     })
 }

@@ -5,7 +5,7 @@
         <meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		
-		<link rel="stylesheet" href="script.css" type="text/css" />
+		<link rel="stylesheet" href="main.css" type="text/css" />
 	</head>
     
     <body ontouchstart="">
@@ -18,7 +18,7 @@
         
         <script src="examples/js/libs/system.min.js"></script>
         <script src="examples/js/libs/jszip.min.js"></script>
-
+		
 		<script src="examples/js/controls/EditorControls.js"></script>
 		<script src="examples/js/controls/TransformControls.js"></script>
 
@@ -54,6 +54,10 @@
 		<script src="examples/js/renderers/SoftwareRenderer.js"></script>
 		<script src="examples/js/renderers/SVGRenderer.js"></script>
 
+		<script src="examples/js/effects/VREffect.js"></script>
+		<script src="examples/js/controls/VRControls.js"></script>
+		<script src="examples/js/WebVR.js"></script>
+		
 		<script src="editor/js/libs/signals.min.js"></script>
 		<script src="editor/js/libs/ui.js"></script>
 		<script src="editor/js/libs/ui.three.js"></script>
@@ -71,7 +75,8 @@
 		<script src="editor/js/Menubar.Edit.js"></script>
 		<script src="editor/js/Menubar.Add.js"></script>
 		<script src="editor/js/Menubar.Play.js"></script>
-		<script src="editor/js/Menubar.Examples.js"></script>
+		<script src="editor/js/Menubar.View.js"></script>
+		<!--<script src="editor/js/Menubar.Examples.js"></script>-->
 		<script src="editor/js/Menubar.Help.js"></script>
 		<script src="editor/js/Menubar.Status.js"></script>
 		<script src="editor/js/Sidebar.js"></script>
@@ -352,6 +357,52 @@
 
 			}, false )
 			*/
+			
+			// VR
+
+			var groupVR;
+
+			// TODO: Use editor.signals.enteredVR (WebVR 1.0)
+
+			editor.signals.enterVR.add( function () {
+
+				if ( groupVR === undefined ) {
+
+					groupVR = new THREE.HTMLGroup( viewport.dom );
+					editor.sceneHelpers.add( groupVR );
+
+					var mesh = new THREE.HTMLMesh( sidebar.dom );
+					mesh.position.set( 15, 0, 15 );
+					mesh.rotation.y = - 0.5;
+					groupVR.add( mesh );
+
+					var signals = editor.signals;
+
+					function updateTexture() {
+
+						mesh.material.map.update();
+
+					}
+
+					signals.objectSelected.add( updateTexture );
+					signals.objectAdded.add( updateTexture );
+					signals.objectChanged.add( updateTexture );
+					signals.objectRemoved.add( updateTexture );
+					signals.sceneGraphChanged.add( updateTexture );
+					signals.historyChanged.add( updateTexture );
+
+				}
+
+				groupVR.visible = true;
+
+			} );
+
+			editor.signals.exitedVR.add( function () {
+
+				if ( groupVR !== undefined ) groupVR.visible = false;
+
+			} );
+			
 		</script>
 		
 		<script type="text/javascript" src="bundle.js"></script>

@@ -4,7 +4,7 @@ export const Components = [
 ]
 
 export default (entities) => {
-    console.log('rolling rolling aaa rolling !')
+    console.log('moving!')
     
     for (const { entity} of entities) {
         
