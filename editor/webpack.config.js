@@ -14,7 +14,7 @@ const appConfig = {
     debug: true,
     entry: [
         'webpack/hot/only-dev-server',
-        'webpack-hot-middleware/client?overlay=false&reload=true',
+        'webpack-hot-middleware/client?overlay=false',
         path.join(__dirname, 'app')
     ],
     output: {
@@ -22,8 +22,8 @@ const appConfig = {
         sourcePrefix: '  ',
         path: path.join(__dirname, 'public'),
         filename: 'bundle.js',
-        library: 'GGFactory',
-        libraryTarget: 'umd'
+        // library: 'GGFactory',
+        // libraryTarget: 'umd'
     },
     externals: {
         'three': 'THREE',

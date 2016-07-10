@@ -6,12 +6,10 @@
 const socket = io.connect('https://gg-ggnore.c9users.io')
 	
 const ScriptSidebar = function ( editor ) {
-	const COMPONENTS = 'components'
 	const SYSTEMS = 'systems'
 	const INIT_SYSTEMS = 'init'
 	const LOGIC_SYSTEMS = 'logic'
 	const RENDER_SYSTEMS = 'render'
-	const ENTITIES = 'entities'
 	
 	let container = new UI.Panel()
 	container.setId('script-sidebar')
@@ -20,63 +18,55 @@ const ScriptSidebar = function ( editor ) {
 		select(event.target.textContent)
 	}
 	
-	let componentsTab = new UI.Text(COMPONENTS).setTextTransform('uppercase').onClick(onClick)
-	let systemsTab = new UI.Text(SYSTEMS).setTextTransform('uppercase').onClick(onClick)
-	let entitiesTab = new UI.Text(ENTITIES).setTextTransform('uppercase').onClick(onClick)
+	let initSystemsTab = new UI.Text(INIT_SYSTEMS).setTextTransform('uppercase').onClick(onClick)
+	let logicSystemsTab = new UI.Text(LOGIC_SYSTEMS).setTextTransform('uppercase').onClick(onClick)
+	let renderSystemsTab = new UI.Text(RENDER_SYSTEMS).setTextTransform('uppercase').onClick(onClick)
 
 	let tabs = new UI.Div()
 	tabs.setId('tabs')
-	tabs.add(componentsTab, systemsTab, entitiesTab)
+	tabs.add(initSystemsTab, logicSystemsTab, renderSystemsTab)
 	container.add(tabs)
 
 	//
 
-	let components = new UI.Span()
-	
-	container.add(components)
-
 	let initSystems = new UI.Span()
 	
+	container.add(initSystems)
+
 	let logicSystems = new UI.Span()
 	
+	container.add(logicSystems)
+
 	let renderSystems = new UI.Span()
 	
-	let systems = new UI.Span().add(new UI.Panel().add(new UI.Text('init systems'), initSystems),
-									new UI.Panel().add(new UI.Text('logic systems'), logicSystems),
-									new UI.Panel().add(new UI.Text('render systems'), renderSystems))
-	
-	container.add(systems)
-
-	let entities = new UI.Span()
-	
-	container.add(entities)
+	container.add(renderSystems)
 
 	const select = (section) => {
-		componentsTab.setClass('')
-		systemsTab.setClass('')
-		entitiesTab.setClass('')
+		initSystemsTab.setClass('')
+		logicSystemsTab.setClass('')
+		renderSystemsTab.setClass('')
 
-		components.setDisplay('none')
-		systems.setDisplay('none')
-		entities.setDisplay('none')
+		initSystems.setDisplay('none')
+		logicSystems.setDisplay('none')
+		renderSystems.setDisplay('none')
 
 		switch (section) {
-			case COMPONENTS:
-				componentsTab.setClass('selected')
-				components.setDisplay('')
+			case INIT_SYSTEMS:
+				initSystemsTab.setClass('selected')
+				initSystems.setDisplay('')
 				break
-			case SYSTEMS:
-				systemsTab.setClass('selected')
-				systems.setDisplay('')
+			case LOGIC_SYSTEMS:
+				logicSystemsTab.setClass('selected')
+				logicSystems.setDisplay('')
 				break
-			case ENTITIES:
-				entitiesTab.setClass('selected')
-				entities.setDisplay('')
+			case RENDER_SYSTEMS:
+				renderSystemsTab.setClass('selected')
+				renderSystems.setDisplay('')
 				break
 		}
 	}
 
-	select(COMPONENTS)
+	select(INIT_SYSTEMS) //todo: set from local storage ? Can you do this with UI lib?
           
     const signals = editor.signals
     
@@ -102,9 +92,6 @@ const ScriptSidebar = function ( editor ) {
         }
         
         switch (section) {
-			case COMPONENTS:
-				components.add(new UI.Element(ul))
-				break
 			case `${SYSTEMS}/${INIT_SYSTEMS}`:
 				initSystems.add(new UI.Element(ul))
 				break
@@ -114,17 +101,12 @@ const ScriptSidebar = function ( editor ) {
 			case `${SYSTEMS}/${RENDER_SYSTEMS}`:
 				renderSystems.add(new UI.Element(ul))
 				break
-			case ENTITIES:
-				entities.add(new UI.Element(ul))
-				break
 		}
     })
 
-	socket.emit('fetch files', COMPONENTS)
 	socket.emit('fetch files', `${SYSTEMS}/${INIT_SYSTEMS}`)
 	socket.emit('fetch files', `${SYSTEMS}/${LOGIC_SYSTEMS}`)
 	socket.emit('fetch files', `${SYSTEMS}/${RENDER_SYSTEMS}`)
-	socket.emit('fetch files', ENTITIES)
 	
 	socket.on('file fetched', file => {
 		signals.editScript.dispatch(file)
@@ -151,6 +133,9 @@ const ScriptSidebar = function ( editor ) {
 	
 	scriptContainer.onKeyDown((e) => {
 		if (e.keyCode === 27) { // esc
+			e.preventDefault()
+			e.stopPropagation()
+			
 			scriptContainer.setDisplay('none')
 		}
 		
@@ -165,6 +150,9 @@ const ScriptSidebar = function ( editor ) {
             }
                 
 			socket.emit('save file', activeSection, activeFile, codeEditor.getValue())
+			setTimeout(() => {
+				scriptContainer.setDisplay('none')
+			}, 1000)
 		}
 	})
 	

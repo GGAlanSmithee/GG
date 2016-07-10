@@ -26,8 +26,6 @@ app.use(webpackDevMiddleware(compiler, { noInfo: true, lazy: false, hot: true, p
 app.use(webpackHotMiddleware(compiler))
 
 app.get('/', (req, res) => {
-    
-                    
     res.sendFile(path.join(__dirname, `index.html`))
 })
 
@@ -62,15 +60,15 @@ io.on('connection', socket => {
                 }
                 
                 // rebundle if the file is a new one
-                if (fileIsNew) {
-                    exec('gg -p browser -d app/src -o index.js', (err, stdout, stderr) => {
-                        if (err) {
-                            console.warn(err)
-                        } else {
-                            console.log('generated app')
-                        }
-                    })
-                }
+                // if (fileIsNew) {
+                //     exec('gg -p browser -d app/src -o index.js', (err, stdout, stderr) => {
+                //         if (err) {
+                //             console.warn(err)
+                //         } else {
+                //             console.log('generated app')
+                //         }
+                //     })
+                // }
                 
                 socket.emit('file saved', `${name}.js saved`)
             })

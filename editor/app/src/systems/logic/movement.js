@@ -4,7 +4,9 @@ export const Components = [
 ]
 
 export default (entities) => {
-    for (const { entity } of entities) {
+    console.log('rolling rolling aaa rolling !')
+    
+    for (const { entity} of entities) {
         
     }
 }
