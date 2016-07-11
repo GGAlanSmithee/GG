@@ -15,7 +15,7 @@ export default class GG {
         
         this.dom = this.rendererManager.getDom()
         
-        // this.entityManager.onInit({renderManager: this.rendererManager})
+        this.entityManager.onInit({renderManager: this.rendererManager})
         
         this.loopManager.setUpdate(delta => {
             this.entityManager.onLogic(delta)
@@ -25,27 +25,6 @@ export default class GG {
         })
     }
     
-    registerEntityConfiguration(key, entity) {
-        console.log(key, entity)
-        
-//         const loader = new THREE.ObjectLoader();
-// 		const scene = loader.parse(json.scene)
-		
-// 		console.log(scene.traverse((obj => {
-// 			if (obj.userData) {
-// 				console.log(obj)
-// 			}
-// 		})))
-		
-        // this.entityManager.build()
-        
-        // for (let component of entity.components) {
-        //     this.entityManager.withComponent(component)
-        // }
-        
-        // this.entityManager.registerConfiguration(key)
-    }
-    
     initEntities(parsedScene) {
         parsedScene.traverse((obj) => {
 		    const {components} = obj.userData
@@ -53,14 +32,17 @@ export default class GG {
 			let config = this.entityManager.build()
 			    
 		    config.withComponent('transform', function() {
-		      //  this.x = obj.position.x
-		      //  this.y = obj.position.y
-		      //  this.z = obj.position.z
+		        this.x = obj.position.x
+		        this.y = obj.position.y
+		        this.z = obj.position.z
 	        })
 	        
-	        config.withComponent('appearance', function() {
-		      //  this.obj = obj
-	        })
+	        
+	        if (obj.id) {
+	            config.withComponent('appearance', function() {
+    	           this.id = obj.id
+    	        })
+	        }
 	        
 			if (components) {
 			    for (const {key, data} of components) {

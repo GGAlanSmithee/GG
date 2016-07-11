@@ -6,6 +6,7 @@
 const socket = io.connect('https://gg-ggnore.c9users.io')
 	
 const ScriptSidebar = function ( editor ) {
+	const COMPONENTS = 'components'
 	const SYSTEMS = 'systems'
 	const INIT_SYSTEMS = 'init'
 	const LOGIC_SYSTEMS = 'logic'
@@ -18,17 +19,22 @@ const ScriptSidebar = function ( editor ) {
 		select(event.target.textContent)
 	}
 	
+	let componentsTab = new UI.Text(COMPONENTS).setTextTransform('uppercase').onClick(onClick)
 	let initSystemsTab = new UI.Text(INIT_SYSTEMS).setTextTransform('uppercase').onClick(onClick)
 	let logicSystemsTab = new UI.Text(LOGIC_SYSTEMS).setTextTransform('uppercase').onClick(onClick)
 	let renderSystemsTab = new UI.Text(RENDER_SYSTEMS).setTextTransform('uppercase').onClick(onClick)
 
 	let tabs = new UI.Div()
 	tabs.setId('tabs')
-	tabs.add(initSystemsTab, logicSystemsTab, renderSystemsTab)
+	tabs.add(componentsTab, initSystemsTab, logicSystemsTab, renderSystemsTab)
 	container.add(tabs)
 
 	//
 
+	let components = new UI.Span()
+	
+	container.add(components)
+	
 	let initSystems = new UI.Span()
 	
 	container.add(initSystems)
@@ -42,15 +48,21 @@ const ScriptSidebar = function ( editor ) {
 	container.add(renderSystems)
 
 	const select = (section) => {
+		componentsTab.setClass('')
 		initSystemsTab.setClass('')
 		logicSystemsTab.setClass('')
 		renderSystemsTab.setClass('')
 
+		components.setDisplay('none')
 		initSystems.setDisplay('none')
 		logicSystems.setDisplay('none')
 		renderSystems.setDisplay('none')
 
 		switch (section) {
+			case COMPONENTS:
+				componentsTab.setClass('selected')
+				components.setDisplay('')
+				break
 			case INIT_SYSTEMS:
 				initSystemsTab.setClass('selected')
 				initSystems.setDisplay('')
@@ -92,6 +104,9 @@ const ScriptSidebar = function ( editor ) {
         }
         
         switch (section) {
+        	case COMPONENTS:
+        		components.add(new UI.Element(ul))
+        		break;
 			case `${SYSTEMS}/${INIT_SYSTEMS}`:
 				initSystems.add(new UI.Element(ul))
 				break
@@ -104,6 +119,7 @@ const ScriptSidebar = function ( editor ) {
 		}
     })
 
+	socket.emit('fetch files', `${COMPONENTS}`)
 	socket.emit('fetch files', `${SYSTEMS}/${INIT_SYSTEMS}`)
 	socket.emit('fetch files', `${SYSTEMS}/${LOGIC_SYSTEMS}`)
 	socket.emit('fetch files', `${SYSTEMS}/${RENDER_SYSTEMS}`)
@@ -136,7 +152,9 @@ const ScriptSidebar = function ( editor ) {
 			e.preventDefault()
 			e.stopPropagation()
 			
-			scriptContainer.setDisplay('none')
+			if (e.shiftKey) {
+				scriptContainer.setDisplay('none')
+			}
 		}
 		
 		if (e.ctrlKey && e.keyCode === 83) { // ctrl+s

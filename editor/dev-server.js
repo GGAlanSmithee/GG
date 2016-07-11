@@ -25,6 +25,16 @@ app.use(express.static(publicPath))
 app.use(webpackDevMiddleware(compiler, { noInfo: true, lazy: false, hot: true, publicPath: appConfig.output.publicPath }))
 app.use(webpackHotMiddleware(compiler))
 
+const bundle = () => {
+    exec('gg -p browser -d app/src -o index.js', (err, stdout, stderr) => {
+        if (err) {
+            console.warn(err)
+        } else {
+            console.log('app bundled')
+        }
+    })
+}
+
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, `index.html`))
 })
@@ -53,22 +63,19 @@ io.on('connection', socket => {
     })
     
     socket.on('save file', (section, name, data) => {
-        fs.stat(name, fileIsNew => {
-            fs.writeFile(path.join(appSrcPath, section, name), data, err => {
+        const filename = path.join(appSrcPath, section, name)
+        
+        fs.access(filename, fs.F_OK, err => {
+            const fileIsNew = !!err
+            
+            fs.writeFile(filename, data, err => {
                 if (err) {
                     throw err
                 }
                 
-                // rebundle if the file is a new one
-                // if (fileIsNew) {
-                //     exec('gg -p browser -d app/src -o index.js', (err, stdout, stderr) => {
-                //         if (err) {
-                //             console.warn(err)
-                //         } else {
-                //             console.log('generated app')
-                //         }
-                //     })
-                // }
+                if (fileIsNew) {
+                    bundle()
+                }
                 
                 socket.emit('file saved', `${name}.js saved`)
             })
@@ -77,5 +84,7 @@ io.on('connection', socket => {
 })
 
 server.listen(process.env.PORT || 8080, err => {
+    bundle()
+    
     console.log(`listening on port ${server.address().port}`)
 })
