@@ -14,7 +14,7 @@ export default (entities, {renderManager}) => {
         }
         
         obj.position.x = transform.x
-        // obj.position.y = transform.y
-        // obj.position.z = transform.z
+        obj.position.y = transform.y
+        obj.position.z = transform.z
     }
 }

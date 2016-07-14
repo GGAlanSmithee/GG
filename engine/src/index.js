@@ -46,8 +46,16 @@ export default class GG {
 	        
 			if (components) {
 			    for (const {key, data} of components) {
-			     //   config.withComponent(key, data)
-		            config.withComponent(key)
+		            config.withComponent(key, function() {
+		                // todo handle non-objects
+		                Object.keys(data).forEach(key => {
+		                    if (this[key] == null) {
+		                        return
+		                    }
+		                    
+		                    this[key] = data[key]
+		                }, this)
+		            })
 			    }
 			    
 			    obj.userData.entityId = config.create(1)

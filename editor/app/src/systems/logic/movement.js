@@ -7,6 +7,8 @@ export default (entities, delta) => {
     for (const {entity} of entities) {
         const {transform, velocity} = entity
         
+        console.log(velocity)
+        
         transform.x += velocity.x * delta / 1000
         transform.y += velocity.y * delta / 1000
         transform.z += velocity.z * delta / 1000
