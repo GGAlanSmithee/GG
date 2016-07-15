@@ -12,31 +12,10 @@
 	overflow: auto;
 }
 
-#script-sidebar .file-list {
-    list-style: none;
-}
-
-#script-sidebar .file-list li {
-    display: inline-block;
-    float: left;
-    clear: left;
-}
-
-#script-sidebar .file-list li:hover {
-    cursor: pointer;
-    background-color: #aaa;
-    color: #eee;
-}
-
 #script-editor {
 	position: absolute;
 	top: 33px;
 	left: 290px;
 	right: 300px;
 	bottom: 32px;
-}
-
-.file-list {
-	width: 100%;
-	height: 100px;
 }

@@ -89,32 +89,46 @@ const ScriptSidebar = function ( editor ) {
         let ul = document.createElement('ul')
         ul.className = 'file-list'
         
+        let scriptsContainer = new UI.Row()
+        
         for (let file of files) {
-            let li = document.createElement('li')
-            
-            li.addEventListener('click', () => {
+        	scriptsContainer.add(new UI.Input(file).setMarginLeft('4px').setMarginBottom('4px').setWidth('130px').setFontSize('12px').onChange(() => {
+				//todo: change name of file
+				// editor.execute( new SetScriptValueCommand( editor.selected, script, 'name', this.getValue() ) );
+			}))
+			
+			scriptsContainer.add(new UI.Button('Edit').setMarginLeft('4px').setMarginBottom('4px').onClick(() => {
                 socket.emit('fetch file', section, file)
                 activeSection = section
                 activeFile = file
-            })
-            
-            li.textContent = file
-            
-            ul.appendChild(li)
+			}))
+
+			scriptsContainer.add(new UI.Button('Remove').setMarginLeft('4px').setMarginBottom('4px').onClick(() => {
+				if (confirm(`Delete ${file}?`)) {
+					// todo: close if open and send delete message
+					// socket.emit('delete file', section, file)
+				}
+			}))
+			
+			scriptsContainer.add(new UI.Break())
         }
         
+        const newScriptButton = new UI.Button('New').setMarginLeft('4px').onClick(() => {
+			//todo: new script socket event
+		})
+			
         switch (section) {
         	case COMPONENTS:
-        		components.add(new UI.Element(ul))
+        		components.add(new UI.Break(), new UI.Break(), newScriptButton, new UI.Break(), new UI.Break(), scriptsContainer)
         		break;
 			case `${SYSTEMS}/${INIT_SYSTEMS}`:
-				initSystems.add(new UI.Element(ul))
+				initSystems.add(new UI.Break(), new UI.Break(), newScriptButton, new UI.Break(), new UI.Break(), scriptsContainer)
 				break
 			case `${SYSTEMS}/${LOGIC_SYSTEMS}`:
-				logicSystems.add(new UI.Element(ul))
+				logicSystems.add(new UI.Break(), new UI.Break(), newScriptButton, new UI.Break(), new UI.Break(), scriptsContainer)
 				break
 			case `${SYSTEMS}/${RENDER_SYSTEMS}`:
-				renderSystems.add(new UI.Element(ul))
+				renderSystems.add(new UI.Break(), new UI.Break(), newScriptButton, new UI.Break(), new UI.Break(), scriptsContainer)
 				break
 		}
     })
