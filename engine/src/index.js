@@ -4,12 +4,10 @@ import DI from './DI/browser'
 
 const COMPONENT = {
     TRANSFORM: 'transform',
-    VELOCITY: 'velocity',
     APPEARANCE: 'appearance'
 }
 
 const SYSTEM = {
-    MOVEMENT: 'movement',
     RENDER: 'render'
 }
 
@@ -41,28 +39,10 @@ export default class GG {
 
     initComponents() {
         this.entityManager.registerComponent(COMPONENT.TRANSFORM,  {x: 0, y: 0, z: 0})
-        this.entityManager.registerComponent(COMPONENT.VELOCITY,   {x: 0, y: 0, z: 0})
         this.entityManager.registerComponent(COMPONENT.APPEARANCE, {id: 0})
     }
     
     initSystems() {
-        const movementComponents = [
-            COMPONENT.TRANSFORM,
-            COMPONENT.VELOCITY
-        ]
-        
-        const movement = (entities, delta) => {
-            for (const {entity} of entities) {
-                const {transform, velocity} = entity
-                
-                transform.x += velocity.x * delta / 1000
-                transform.y += velocity.y * delta / 1000
-                transform.z += velocity.z * delta / 1000
-            }
-        }
-
-        this.entityManager.registerLogicSystem(SYSTEM.MOVEMENT, movementComponents, movement)
-        
         const renderComponents = [
             COMPONENT.TRANSFORM,
             COMPONENT.APPEARANCE
@@ -108,16 +88,20 @@ export default class GG {
 	        
 			if (components) {
 			    for (const {key, data} of components) {
-		            config.withComponent(key, function() {
-		                // todo handle non-objects
-		                Object.keys(data).forEach(key => {
-		                    if (this[key] == null || data[key] == null) {
-		                        return
-		                    }
-		                    
-		                    this[key] = data[key]
-		                }, this)
-		            })
+			        if (data == null) {
+			            config.withComponent(key)
+			        } else {
+			            config.withComponent(key, function() {
+    		                // todo handle non-objects
+    		                Object.keys(data).forEach(key => {
+    		                    if (this[key] == null || data[key] == null) {
+    		                        return
+    		                    }
+    		                    
+    		                    this[key] = data[key]
+    		                }, this)
+    		            })
+			        }
 			    }
 			    
 			    obj.userData.entityId = config.create(1)
