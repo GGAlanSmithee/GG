@@ -92,9 +92,16 @@ const ScriptSidebar = function ( editor ) {
         for (let file of files) {
         	let scriptRow = new UI.Row().setId(`script-${file}`)
         	
-        	scriptRow.add(new UI.Input(file).setMarginLeft('4px').setMarginBottom('4px').setWidth('130px').setFontSize('12px').onChange(() => {
-				//todo: change name of file
-				// editor.execute( new SetScriptValueCommand( editor.selected, script, 'name', this.getValue() ) );
+        	scriptRow.add(new UI.Input(file).setMarginLeft('4px').setMarginBottom('4px').setWidth('130px').setFontSize('12px').onKeyDown(e => {
+        		e.stopPropagation()
+        		
+        		if (e.ctrlKey && e.keyCode === 83) { // ctrl+s
+        			e.preventDefault()
+        			
+					if (file !== e.target.value) {
+			            socket.emit('change filename', section, file, e.target.value)
+			        }
+        		}
 			}))
 			
 			scriptRow.add(new UI.Button('Edit').setMarginLeft('4px').setMarginBottom('4px').onClick(() => {
@@ -121,15 +128,19 @@ const ScriptSidebar = function ( editor ) {
 			
         switch (section) {
         	case COMPONENTS:
+        		components.clear()
         		components.add(new UI.Break(), new UI.Break(), newScriptButton, new UI.Break(), new UI.Break(), scriptsContainer)
         		break;
 			case `${SYSTEMS}/${INIT_SYSTEMS}`:
+				initSystems.clear()
 				initSystems.add(new UI.Break(), new UI.Break(), newScriptButton, new UI.Break(), new UI.Break(), scriptsContainer)
 				break
 			case `${SYSTEMS}/${LOGIC_SYSTEMS}`:
+				logicSystems.clear()
 				logicSystems.add(new UI.Break(), new UI.Break(), newScriptButton, new UI.Break(), new UI.Break(), scriptsContainer)
 				break
 			case `${SYSTEMS}/${RENDER_SYSTEMS}`:
+				renderSystems.clear()
 				renderSystems.add(new UI.Break(), new UI.Break(), newScriptButton, new UI.Break(), new UI.Break(), scriptsContainer)
 				break
 		}
@@ -139,6 +150,10 @@ const ScriptSidebar = function ( editor ) {
 	socket.emit('fetch files', `${SYSTEMS}/${INIT_SYSTEMS}`)
 	socket.emit('fetch files', `${SYSTEMS}/${LOGIC_SYSTEMS}`)
 	socket.emit('fetch files', `${SYSTEMS}/${RENDER_SYSTEMS}`)
+	
+	socket.on('filename changed', (section, newFile) => {
+		socket.emit('fetch files', section)	
+	})
 	
 	const scriptContainer = new UI.Panel()
 	scriptContainer.setId('script-editor')

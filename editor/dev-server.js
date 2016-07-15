@@ -77,8 +77,27 @@ io.on('connection', socket => {
                     bundle()
                 }
                 
-                socket.emit('file saved', `${name}.js saved`)
+                socket.emit('file saved', section, name)
             })
+        })
+    })
+    
+    socket.on('change filename', (section, oldName, newName) => {
+        if (oldName === newName) {
+            return
+        }
+        
+        const oldFilename = path.join(appSrcPath, section, oldName)
+        const newFilename = path.join(appSrcPath, section, newName)
+        
+        fs.rename(oldFilename, newFilename, err => {
+            if (err) {
+                throw err
+            }
+                
+            bundle()
+                
+            socket.emit('filename changed', section, newName)
         })
     })
     
