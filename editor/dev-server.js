@@ -81,6 +81,18 @@ io.on('connection', socket => {
             })
         })
     })
+    
+    socket.on('delete file', (section, name) => {
+        const filename = path.join(appSrcPath, section, name)
+        
+        fs.unlink(filename, err => {
+            if (err) {
+                throw err
+            }
+            
+            socket.emit('file deleted', name)
+        })
+    })
 })
 
 server.listen(process.env.PORT || 8080, err => {

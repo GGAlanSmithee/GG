@@ -79,9 +79,7 @@ const ScriptSidebar = function ( editor ) {
 	}
 
 	select(INIT_SYSTEMS) //todo: set from local storage ? Can you do this with UI lib?
-          
-    const signals = editor.signals
-    
+
     let activeSection
     let activeFile
     
@@ -92,25 +90,29 @@ const ScriptSidebar = function ( editor ) {
         let scriptsContainer = new UI.Row()
         
         for (let file of files) {
-        	scriptsContainer.add(new UI.Input(file).setMarginLeft('4px').setMarginBottom('4px').setWidth('130px').setFontSize('12px').onChange(() => {
+        	let scriptRow = new UI.Row().setId(`script-${file}`)
+        	
+        	scriptRow.add(new UI.Input(file).setMarginLeft('4px').setMarginBottom('4px').setWidth('130px').setFontSize('12px').onChange(() => {
 				//todo: change name of file
 				// editor.execute( new SetScriptValueCommand( editor.selected, script, 'name', this.getValue() ) );
 			}))
 			
-			scriptsContainer.add(new UI.Button('Edit').setMarginLeft('4px').setMarginBottom('4px').onClick(() => {
+			scriptRow.add(new UI.Button('Edit').setMarginLeft('4px').setMarginBottom('4px').onClick(() => {
                 socket.emit('fetch file', section, file)
                 activeSection = section
                 activeFile = file
 			}))
 
-			scriptsContainer.add(new UI.Button('Remove').setMarginLeft('4px').setMarginBottom('4px').onClick(() => {
+			scriptRow.add(new UI.Button('Remove').setMarginLeft('4px').setMarginBottom('4px').onClick(function() {
 				if (confirm(`Delete ${file}?`)) {
-					// todo: close if open and send delete message
-					// socket.emit('delete file', section, file)
+					socket.emit('delete file', section, file)
+					this.dom.parentNode.remove()
 				}
 			}))
 			
-			scriptsContainer.add(new UI.Break())
+			scriptRow.add(new UI.Break())
+			
+			scriptsContainer.add(scriptRow)
         }
         
         const newScriptButton = new UI.Button('New').setMarginLeft('4px').onClick(() => {
@@ -138,10 +140,6 @@ const ScriptSidebar = function ( editor ) {
 	socket.emit('fetch files', `${SYSTEMS}/${LOGIC_SYSTEMS}`)
 	socket.emit('fetch files', `${SYSTEMS}/${RENDER_SYSTEMS}`)
 	
-	socket.on('file fetched', file => {
-		signals.editScript.dispatch(file)
-	})
-
 	const scriptContainer = new UI.Panel()
 	scriptContainer.setId('script-editor')
 	scriptContainer.setPosition('absolute')
@@ -154,11 +152,20 @@ const ScriptSidebar = function ( editor ) {
     codeEditor.setTheme('ace/theme/monokai')
     codeEditor.getSession().setMode('ace/mode/javascript')
 	
-	signals.editScript.add(script => {
-		codeEditor.setValue(script, 1)
+	socket.on('file fetched', file => {
+		codeEditor.setValue(file, 1)
 		codeEditor.focus()
 		
 		scriptContainer.setDisplay('')
+	})
+
+	socket.on('file deleted', script => {
+		if (script !== activeFile) {
+			return
+		}
+		
+		codeEditor.setValue('', 1)
+			scriptContainer.setDisplay('none')
 	})
 	
 	scriptContainer.onKeyDown((e) => {
@@ -166,9 +173,7 @@ const ScriptSidebar = function ( editor ) {
 			e.preventDefault()
 			e.stopPropagation()
 			
-			if (e.shiftKey) {
-				scriptContainer.setDisplay('none')
-			}
+			scriptContainer.setDisplay('none')
 		}
 		
 		if (e.ctrlKey && e.keyCode === 83) { // ctrl+s
