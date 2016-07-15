@@ -26,12 +26,18 @@ app.use(webpackDevMiddleware(compiler, { noInfo: true, lazy: false, hot: true, p
 app.use(webpackHotMiddleware(compiler))
 
 const bundle = () => {
-    exec('gg -p browser -d app/src -o index.js', (err, stdout, stderr) => {
-        if (err) {
-            console.warn(err)
-        } else {
-            console.log('app bundled')
-        }
+    return new Promise((resolve, reject) => {
+        exec('gg -p browser -d app/src -o index.js', (err, stdout, stderr) => {
+            if (err) {
+                console.warn(err)
+                
+                reject(err)
+            } else {
+                console.log('app bundled')
+                
+                resolve()
+            }
+        })  
     })
 }
 
@@ -63,6 +69,8 @@ io.on('connection', socket => {
     })
     
     socket.on('save file', (section, name, data) => {
+        console.log(section, name)
+        
         const filename = path.join(appSrcPath, section, name)
         
         fs.access(filename, fs.F_OK, err => {
@@ -73,11 +81,13 @@ io.on('connection', socket => {
                     throw err
                 }
                 
-                if (fileIsNew) {
-                    bundle()
+                if (!fileIsNew) {
+                    return socket.emit('file saved', section, name, fileIsNew)
                 }
                 
-                socket.emit('file saved', section, name)
+                bundle().then(() => {
+                    socket.emit('file saved', section, name, fileIsNew)
+                })
             })
         })
     })
@@ -95,9 +105,9 @@ io.on('connection', socket => {
                 throw err
             }
                 
-            bundle()
-                
-            socket.emit('filename changed', section, newName)
+            bundle().then(() => {
+                socket.emit('filename changed', section, newName)
+            })
         })
     })
     
@@ -109,7 +119,10 @@ io.on('connection', socket => {
                 throw err
             }
             
-            socket.emit('file deleted', name)
+            //todo: hot module reloading not properly removing file from bundle....
+            bundle().then(() => {
+                socket.emit('file deleted', section, name)
+            })
         })
     })
 })

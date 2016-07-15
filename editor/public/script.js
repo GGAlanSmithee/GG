@@ -12,6 +12,8 @@ const ScriptSidebar = function ( editor ) {
 	const LOGIC_SYSTEMS = 'logic'
 	const RENDER_SYSTEMS = 'render'
 	
+	let codeEditor
+	
 	let container = new UI.Panel()
 	container.setId('script-sidebar')
 
@@ -28,8 +30,6 @@ const ScriptSidebar = function ( editor ) {
 	tabs.setId('tabs')
 	tabs.add(componentsTab, initSystemsTab, logicSystemsTab, renderSystemsTab)
 	container.add(tabs)
-
-	//
 
 	let components = new UI.Span()
 	
@@ -90,7 +90,7 @@ const ScriptSidebar = function ( editor ) {
         let scriptsContainer = new UI.Row()
         
         for (let file of files) {
-        	let scriptRow = new UI.Row().setId(`script-${file}`)
+        	let scriptRow = new UI.Row()
         	
         	scriptRow.add(new UI.Input(file).setMarginLeft('4px').setMarginBottom('4px').setWidth('130px').setFontSize('12px').onKeyDown(e => {
         		e.stopPropagation()
@@ -122,8 +122,20 @@ const ScriptSidebar = function ( editor ) {
 			scriptsContainer.add(scriptRow)
         }
         
-        const newScriptButton = new UI.Button('New').setMarginLeft('4px').onClick(() => {
-			//todo: new script socket event
+        let newScriptButton = new UI.Button('New').setMarginLeft('4px').onClick(e => {
+			e.stopPropagation()
+			e.preventDefault()
+			
+			activeSection = section
+			activeFile = null
+			
+			if (codeEditor != null) {
+				//todo: set template value
+				codeEditor.setValue('', 1)
+				codeEditor.focus()
+				
+				scriptContainer.setDisplay('')
+			}
 		})
 			
         switch (section) {
@@ -155,6 +167,12 @@ const ScriptSidebar = function ( editor ) {
 		socket.emit('fetch files', section)	
 	})
 	
+	socket.on('file saved', (section, file, isNew) => {
+		if (isNew) {
+			socket.emit('fetch files', section)
+		}
+	})
+	
 	const scriptContainer = new UI.Panel()
 	scriptContainer.setId('script-editor')
 	scriptContainer.setPosition('absolute')
@@ -163,7 +181,7 @@ const ScriptSidebar = function ( editor ) {
 	
 	document.body.appendChild( scriptContainer.dom )
 	
-	const codeEditor = ace.edit('script-editor')
+	codeEditor = ace.edit('script-editor')
     codeEditor.setTheme('ace/theme/monokai')
     codeEditor.getSession().setMode('ace/mode/javascript')
 	
@@ -174,13 +192,13 @@ const ScriptSidebar = function ( editor ) {
 		scriptContainer.setDisplay('')
 	})
 
-	socket.on('file deleted', script => {
+	socket.on('file deleted', (section, script) => {
 		if (script !== activeFile) {
 			return
 		}
 		
 		codeEditor.setValue('', 1)
-			scriptContainer.setDisplay('none')
+		scriptContainer.setDisplay('none')
 	})
 	
 	scriptContainer.onKeyDown((e) => {
@@ -200,8 +218,19 @@ const ScriptSidebar = function ( editor ) {
             if (annotations.length) {
                 return alert(annotations.map(({row, column, text}) => `error [row ${row}, column ${column}]: ${text}\n\n`))
             }
-                
+            
+            if (activeFile == null) {
+            	const filename = prompt('Filename:')
+
+				if (filename == null) {
+				    return
+				}
+				
+				activeFile = filename
+            }
+            
 			socket.emit('save file', activeSection, activeFile, codeEditor.getValue())
+			
 			setTimeout(() => {
 				scriptContainer.setDisplay('none')
 			}, 1000)
