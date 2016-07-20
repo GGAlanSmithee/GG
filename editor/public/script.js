@@ -5,7 +5,7 @@
 
 const socket = io.connect('https://gg-ggnore.c9users.io')
 	
-const ScriptSidebar = function ( editor ) {
+const ScriptSidebar = function (editor) {
 	const COMPONENTS = 'components'
 	const SYSTEMS = 'systems'
 	const INIT_SYSTEMS = 'init'
@@ -78,19 +78,21 @@ const ScriptSidebar = function ( editor ) {
 		}
 	}
 
-	select(INIT_SYSTEMS) //todo: set from local storage ? Can you do this with UI lib?
+	select(COMPONENTS) //todo: set from local storage ? Can you do this with UI lib?
 
     let activeSection
     let activeFile
+    let activeEntityUuid = editor.selected
+    let editiingEntityComponent = false
     
-    socket.on('files fetched', (section, files) => {
-        let ul = document.createElement('ul')
-        ul.className = 'file-list'
-        
-        let scriptsContainer = new UI.Row()
+    socket.on('files fetched', (section, files, entityComponents = {}) => {
+        const scriptsContainer = new UI.Row()
         
         for (let file of files) {
-        	let scriptRow = new UI.Row()
+        	const name = file.slice(0, -5)
+    		const entityComponent = entityComponents[name]
+    		
+        	const scriptRow = new UI.Row()
         	
         	scriptRow.add(new UI.Input(file).setMarginLeft('4px').setMarginBottom('4px').setWidth('130px').setFontSize('12px').onKeyDown(e => {
         		e.stopPropagation()
@@ -110,12 +112,37 @@ const ScriptSidebar = function ( editor ) {
                 activeFile = file
 			}))
 
-			scriptRow.add(new UI.Button('Remove').setMarginLeft('4px').setMarginBottom('4px').onClick(function() {
+			if (section === COMPONENTS && entityComponent != null) {
+				scriptRow.add(new UI.Button('A').setMarginLeft('4px').setMarginBottom('4px').onClick(() => {
+	                codeEditor.setValue(JSON.stringify(entityComponent, null, 4), 1)
+					codeEditor.focus()
+					scriptContainer.setDisplay('')
+					
+					editiingEntityComponent = true
+	                activeSection = section
+	                activeFile = file
+				}))
+			}
+			
+			scriptRow.add(new UI.Button('Remove').setMarginLeft('4px').setMarginBottom('4px').onClick(() => {
 				if (confirm(`Delete ${file}?`)) {
 					socket.emit('delete file', section, file)
+					
 					this.dom.parentNode.remove()
 				}
 			}))
+			
+			if (section === COMPONENTS) {
+				if (entityComponent == null) {
+					scriptRow.add(new UI.Button('+').setMarginLeft('4px').setMarginBottom('4px').onClick(() => {
+						socket.emit('add component to entity', activeEntityUuid, file, name)
+					}))
+				} else {
+					scriptRow.add(new UI.Button('-').setMarginLeft('4px').setMarginBottom('4px').onClick(() => {
+						socket.emit('remove component from entity', activeEntityUuid, name)
+					}))
+				}
+			}
 			
 			scriptRow.add(new UI.Break())
 			
@@ -158,19 +185,41 @@ const ScriptSidebar = function ( editor ) {
 		}
     })
 
-	socket.emit('fetch files', `${COMPONENTS}`)
+	editor.signals.objectSelected.add(o => {
+		if (o == null) {
+			activeEntityUuid = null
+			return
+		}
+		
+		const {uuid} = o
+
+		socket.emit('fetch files', COMPONENTS, uuid || activeEntityUuid)
+		activeEntityUuid = uuid
+	})
+	
+	socket.emit('fetch files', COMPONENTS, activeEntityUuid)
 	socket.emit('fetch files', `${SYSTEMS}/${INIT_SYSTEMS}`)
 	socket.emit('fetch files', `${SYSTEMS}/${LOGIC_SYSTEMS}`)
 	socket.emit('fetch files', `${SYSTEMS}/${RENDER_SYSTEMS}`)
 	
 	socket.on('filename changed', (section, newFile) => {
-		socket.emit('fetch files', section)	
+		socket.emit('fetch files', section, activeEntityUuid)	
 	})
 	
-	socket.on('file saved', (section, file, isNew) => {
-		if (isNew) {
-			socket.emit('fetch files', section)
-		}
+	socket.on('file saved', (section, file, uuid = null) => {
+		socket.emit('fetch files', section, uuid || activeEntityUuid)
+	})
+	
+	socket.on('component removed from entity', (uuid, name) => {
+		socket.emit('fetch files', COMPONENTS, uuid || activeEntityUuid)
+	})
+	
+	socket.on('component removed from all entities', name => {
+		socket.emit('fetch files', COMPONENTS, activeEntityUuid)
+	})
+	
+	socket.on('component added to entity', (uuid, name) => {
+		socket.emit('fetch files', COMPONENTS, uuid || activeEntityUuid)
 	})
 	
 	const scriptContainer = new UI.Panel()
@@ -193,6 +242,8 @@ const ScriptSidebar = function ( editor ) {
 	})
 
 	socket.on('file deleted', (section, script) => {
+		socket.emit('fetch files', activeSection, activeEntityUuid)
+		
 		if (script !== activeFile) {
 			return
 		}
@@ -207,6 +258,7 @@ const ScriptSidebar = function ( editor ) {
 			e.stopPropagation()
 			
 			scriptContainer.setDisplay('none')
+			editiingEntityComponent = false
 		}
 		
 		if (e.ctrlKey && e.keyCode === 83) { // ctrl+s
@@ -229,10 +281,11 @@ const ScriptSidebar = function ( editor ) {
 				activeFile = filename
             }
             
-			socket.emit('save file', activeSection, activeFile, codeEditor.getValue())
+			socket.emit('save file', activeSection, activeFile, editiingEntityComponent ? activeEntityUuid : null, codeEditor.getValue())
 			
 			setTimeout(() => {
 				scriptContainer.setDisplay('none')
+				editiingEntityComponent = false
 			}, 1000)
 		}
 	})

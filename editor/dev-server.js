@@ -48,13 +48,27 @@ app.get('/', (req, res) => {
 io.on('connection', socket => {
     fs.readdir(path.join(appSrcPath, 'components'), (err, files) => socket.emit('connected', files))
     
-    socket.on('fetch files', section => {
+    socket.on('fetch files', (section, uuid) => {
         fs.readdir(path.join(appSrcPath, section), (err, files) => {
             if (err) {
                 throw err
             }
             
-            socket.emit('files fetched', section, files)
+            if (section === 'components' && uuid != null) {
+                fs.readFile(path.join(appSrcPath, 'entities.json'), 'utf8', (err, data) => {
+                    if (err) {
+                        throw err
+                    }
+                    
+                    const entities = JSON.parse(data)
+                    const entityComponents = entities[uuid] || {}
+                    
+                    socket.emit('files fetched', section, files, entityComponents)
+                })
+            } else {
+                socket.emit('files fetched', section, files)
+            }
+            
         })
     })
     
@@ -68,8 +82,32 @@ io.on('connection', socket => {
         })
     })
     
-    socket.on('save file', (section, name, data) => {
-        console.log(section, name)
+    socket.on('save file', (section, name, uuid, data) => {
+        if (uuid) {
+            fs.readFile(path.join(appSrcPath, 'entities.json'), 'utf8', (err, oldData) => {
+                if (err) {
+                    throw err
+                }
+                
+                let newData = JSON.parse(oldData)
+                
+                if (newData[uuid] == null) {
+                    newData[uuid] = {}
+                }
+                
+                newData[uuid][name.slice(0, -5)] = JSON.parse(data)
+                
+                fs.writeFile(path.join(appSrcPath, 'entities.json'), JSON.stringify(newData, null, 4), err => {
+                    if (err) {
+                        throw err
+                    }
+                    
+                    socket.emit('file saved', section, name, uuid)
+                })
+            })
+            
+            return
+        }
         
         const filename = path.join(appSrcPath, section, name)
         
@@ -82,11 +120,11 @@ io.on('connection', socket => {
                 }
                 
                 if (!fileIsNew) {
-                    return socket.emit('file saved', section, name, fileIsNew)
+                    return socket.emit('file saved', section, name)
                 }
                 
                 bundle().then(() => {
-                    socket.emit('file saved', section, name, fileIsNew)
+                    socket.emit('file saved', section, name)
                 })
             })
         })
@@ -104,7 +142,34 @@ io.on('connection', socket => {
             if (err) {
                 throw err
             }
-                
+            
+            if (section === 'components') {
+                fs.readFile(path.join(appSrcPath, 'entities.json'), 'utf8', (err, data) => {
+                    if (err) {
+                        throw err
+                    }
+                    
+                    data = JSON.parse(data)
+                    const oldComponent = oldName.slice(0, -5)
+                    const newComponent = newName.slice(0, -5)
+                    
+                    Object.keys(Object.assign({}, data)).forEach((uuid) => {
+                        if (data[uuid][oldComponent] != null) {
+                            data[uuid][newComponent] = data[uuid][oldComponent]
+                            delete data[uuid][oldComponent]
+                        }
+                    })
+                    
+                    fs.writeFile(path.join(appSrcPath, 'entities.json'), JSON.stringify(data, null, 4), err => {
+                        if (err) {
+                            throw err
+                        }
+                        
+                        socket.emit('component name change for all entities', oldComponent, newComponent)
+                    })
+                })
+            }
+            
             bundle().then(() => {
                 socket.emit('filename changed', section, newName)
             })
@@ -119,9 +184,92 @@ io.on('connection', socket => {
                 throw err
             }
             
+            if (section === 'components') {
+                fs.readFile(path.join(appSrcPath, 'entities.json'), 'utf8', (err, data) => {
+                    if (err) {
+                        throw err
+                    }
+                    
+                    data = JSON.parse(data)
+                    const component = name.slice(0, -5)
+                    
+                    Object.keys(Object.assign({}, data)).forEach((uuid) => {
+                        if (data[uuid][component] != null) {
+                            delete data[uuid][component]
+                            
+                            if (Object.keys(data[uuid]).length === 0) {
+                                delete data[uuid]
+                            }
+                        }
+                    })
+                    
+                    fs.writeFile(path.join(appSrcPath, 'entities.json'), JSON.stringify(data, null, 4), err => {
+                        if (err) {
+                            throw err
+                        }
+                        
+                        socket.emit('component removed from all entities', name)
+                    })
+                })
+            }
+            
             //todo: hot module reloading not properly removing file from bundle....
             bundle().then(() => {
                 socket.emit('file deleted', section, name)
+            })
+        })
+    })
+    
+    socket.on('add component to entity', (uuid, componentFilename, name) => {
+        fs.readFile(path.join(appSrcPath, 'entities.json'), 'utf8', (err, oldData) => {
+            if (err) {
+                throw err
+            }
+            
+            let newData = JSON.parse(oldData)
+            
+            if (newData[uuid] == null) {
+                newData[uuid] = {}
+            }
+            
+            fs.readFile(path.join(appSrcPath, 'components', componentFilename), 'utf8', (err, data) => {
+                newData[uuid][name] = JSON.parse(data)
+                
+                fs.writeFile(path.join(appSrcPath, 'entities.json'), JSON.stringify(newData, null, 4), err => {
+                    if (err) {
+                        throw err
+                    }
+                    
+                    socket.emit('component added to entity', uuid, name)
+                })
+            })
+        })
+    })
+    
+    socket.on('remove component from entity', (uuid, name) => {
+        fs.readFile(path.join(appSrcPath, 'entities.json'), 'utf8', (err, data) => {
+            if (err) {
+                throw err
+            }
+            
+            data = JSON.parse(data)
+            
+            if (data[uuid] == null || data[uuid][name] == null) {
+                return
+            }
+
+            delete data[uuid][name]
+            
+            if (Object.keys(data[uuid]).length === 0) {
+                delete data[uuid]
+            }
+            
+            fs.writeFile(path.join(appSrcPath, 'entities.json'), JSON.stringify(data, null, 4), err => {
+                if (err) {
+                    throw err
+                }
+                
+                socket.emit('component removed from entity', uuid, name)
             })
         })
     })
