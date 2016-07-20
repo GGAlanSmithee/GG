@@ -1,5 +1,6 @@
 // /* @flow */
 
+// todo make DI not be hardcoded
 import DI from './DI/browser'
 
 const COMPONENT = {
@@ -16,7 +17,7 @@ export default class GG {
     	// width and height set to 500 just to have it as in the editor for the time being
     	this.width  = 500
     	this.height = 500
-    	
+
         this.entityManager   = DI.entityManager()
         this.loopManager     = DI.loopManager()
         this.rendererManager = DI.rendererManager()
@@ -35,6 +36,10 @@ export default class GG {
             this.entityManager.onRender({delta : interpolationPercentage, renderManager: this.rendererManager})
             this.rendererManager.render(interpolationPercentage)
         })
+    }
+    
+    setEntityData(entityData) {
+        this.entityData = entityData
     }
 
     initComponents() {
@@ -69,9 +74,7 @@ export default class GG {
     
     initEntities(parsedScene) {
         parsedScene.traverse((obj) => {
-		    const {components} = obj.userData
-		    
-			let config = this.entityManager.build()
+		    let config = this.entityManager.build()
 			    
 		    config.withComponent(COMPONENT.TRANSFORM, function() {
 		        this.x = obj.position.x
@@ -86,26 +89,28 @@ export default class GG {
     	        })
 	        }
 	        
-			if (components) {
-			    for (const {key, data} of components) {
-			        if (data == null) {
-			            config.withComponent(key)
-			        } else {
-			            config.withComponent(key, function() {
-    		                // todo handle non-objects
-    		                Object.keys(data).forEach(key => {
-    		                    if (this[key] == null || data[key] == null) {
-    		                        return
-    		                    }
-    		                    
-    		                    this[key] = data[key]
-    		                }, this)
-    		            })
-			        }
-			    }
-			    
-			    obj.userData.entityId = config.create(1)
+	        const components = this.entityData[obj.uuid]
+
+			if (components) {	        
+			    Object.keys(components).forEach(key => {
+	                const data = components[key]
+	                
+	                config.withComponent(key, function() {
+		                // todo handle non-objects
+		                Object.keys(data).forEach(key => {
+		                    if (this[key] == null || data[key] == null || this[key] === data[key]) {
+		                        return
+		                    }
+		                    
+		                    console.log('setting', key, 'to', data[key])
+		                    
+		                    this[key] = data[key]
+		                }, this)
+		            })
+	            }, this)
 			}
+
+			config.create(1)
 		})
     }
     
