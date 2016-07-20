@@ -15,8 +15,12 @@ ${fs.readdirSync(`${url}/${sys}/init`).map(name => `import ${stripName(name)}, {
 ${fs.readdirSync(`${url}/${sys}/logic`).map(name => `import ${stripName(name)}, { Components as ${stripName(name)}Components } from '${process.cwd()}/${url}/${sys}/logic/${name}'`).join('\n')}
 ${fs.readdirSync(`${url}/${sys}/render`).map(name => `import ${stripName(name)}, { Components as ${stripName(name)}Components } from '${process.cwd()}/${url}/${sys}/render/${name}'`).join('\n')}
 
+import entityData from '${process.cwd()}/${url}/entities.json'
+
 export default () => {
     const gg = new GG()
+    
+    gg.setEntityData(entityData)
     
 ${fs.readdirSync(`${url}/${comp}`).map(name => `    gg.entityManager.registerComponent('${stripName(name)}', ${stripName(name)})`).join('\n')}
 
