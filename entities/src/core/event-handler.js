@@ -1,4 +1,4 @@
-import EntityManager from './entity-manager'
+import { EntityManager } from './entity-manager'
 
 const emptyPromise = () => {
     return new Promise(resolve => {
@@ -20,7 +20,7 @@ const promise = (callback, context, args, timeout) => {
     })
 }
     
-export default class EventHandler {
+class EventHandler {
     constructor() {
         this.events = new Map()
     }
@@ -99,3 +99,5 @@ export default class EventHandler {
         return Promise.all(promises)
     }
 }
+
+export { EventHandler }

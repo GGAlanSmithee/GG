@@ -1,5 +1,5 @@
-var rollup = require('rollup');
-var babel = require('rollup-plugin-babel');
+const rollup = require('rollup')
+const babel = require('rollup-plugin-babel')
 
 rollup.rollup({
     entry: 'src/index.js',
@@ -10,14 +10,14 @@ rollup.rollup({
             exclude: 'node_modules/**'
         })
     ]
-}).then(function(bundle) {
+}).then(bundle => {
     bundle.write({
         dest: 'dist/gg-entities.js',
         sourceMap: 'inline',
         format: 'umd',
         moduleId: 'GGEntities',
         moduleName: 'GGEntities'
-    });
-}).catch(function(error) {
-    console.warn(error);
-});
+    })
+}).catch(error => {
+    console.warn(error)
+})

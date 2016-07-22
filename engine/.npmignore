@@ -24,8 +24,7 @@ coverage
 .c9
 
 # Other
-example
-old_src
+**/coverage
 
 # Flow
 lib

@@ -1,3 +1,8 @@
+## v2.0.0-beta1 (2016-07-22)
+
+Moves promise related functions out of the `EventHandler` class
+Updates all npm dependencies to latest
+
 ## v2.0.0-alpha3 (2016-04-30)
 
 Adds `EntityManager.registerConfiguration(key)` 
