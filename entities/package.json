@@ -26,9 +26,9 @@
   "jsnext:main": "src/index.js",
   "scripts": {
     "test": "istanbul cover _mocha test/* -- --recursive --compilers js:babel-register --require babel-polyfill",
-    "build": "node build/bundle",
+    "build": "node build/bundle && node build/bundle.es5",
     "lint": "eslint src",
-    "minify": "uglifyjs dist/gg-entities.js -o dist/gg-entities.min.js -c -m",
+    "minify": "uglifyjs dist/gg-entities.es5.js -o dist/gg-entities.es5.min.js -c -m",
     "prepublish": "npm run lint && npm test && npm run build && npm run minify"
   },
   "devDependencies": {

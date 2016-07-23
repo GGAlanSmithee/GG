@@ -1,15 +1,7 @@
 const rollup = require('rollup')
-const babel = require('rollup-plugin-babel')
 
 rollup.rollup({
-    entry: 'src/index.js',
-    plugins: [
-        babel({
-            babelrc: false,
-            presets: [ 'es2015-rollup' ],
-            exclude: 'node_modules/**'
-        })
-    ]
+    entry: 'src/index.js'
 }).then(bundle => {
     bundle.write({
         dest: 'dist/gg-entities.js',
@@ -19,5 +11,5 @@ rollup.rollup({
         moduleName: 'GGEntities'
     })
 }).catch(error => {
-    console.warn(error)
+    console.error(error)
 })
