@@ -47,8 +47,5 @@
     "rollup-plugin-babel": "^2.6.1",
     "sinon": "^1.17.4",
     "uglify-js": "^2.7.0"
-  },
-  "dependencies": {
-    "babel-polyfill": "^6.9.1"
   }
 }
