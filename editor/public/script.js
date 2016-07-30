@@ -169,7 +169,7 @@ const ScriptSidebar = function (editor) {
         	case COMPONENTS:
         		components.clear()
         		components.add(new UI.Break(), new UI.Break(), newScriptButton, new UI.Break(), new UI.Break(), scriptsContainer)
-        		break;
+        		break
 			case `${SYSTEMS}/${INIT_SYSTEMS}`:
 				initSystems.clear()
 				initSystems.add(new UI.Break(), new UI.Break(), newScriptButton, new UI.Break(), new UI.Break(), scriptsContainer)
@@ -233,6 +233,7 @@ const ScriptSidebar = function (editor) {
 	codeEditor = ace.edit('script-editor')
     codeEditor.setTheme('ace/theme/monokai')
     codeEditor.getSession().setMode('ace/mode/javascript')
+	codeEditor.$blockScrolling = Infinity // disabled console warning
 	
 	socket.on('file fetched', file => {
 		codeEditor.setValue(file, 1)

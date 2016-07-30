@@ -133,6 +133,7 @@
 
 		
 		<script>
+			/*global THREE, Editor, Viewport, Toolbar, Menubar, Sidebar, ScriptSidebar, UI, RemoveObjectCommand*/
 			window.URL = window.URL || window.webkitURL
 			window.BlobBuilder = window.BlobBuilder || window.WebKitBlobBuilder || window.MozBlobBuilder
 
@@ -363,7 +364,7 @@
 			
 			// VR
 
-			var groupVR;
+			var groupVR
 
 			// TODO: Use editor.signals.enteredVR (WebVR 1.0)
 
@@ -371,40 +372,40 @@
 
 				if ( groupVR === undefined ) {
 
-					groupVR = new THREE.HTMLGroup( viewport.dom );
-					editor.sceneHelpers.add( groupVR );
+					groupVR = new THREE.HTMLGroup( viewport.dom )
+					editor.sceneHelpers.add( groupVR )
 
-					var mesh = new THREE.HTMLMesh( sidebar.dom );
-					mesh.position.set( 15, 0, 15 );
-					mesh.rotation.y = - 0.5;
-					groupVR.add( mesh );
+					var mesh = new THREE.HTMLMesh( sidebar.dom )
+					mesh.position.set( 15, 0, 15 )
+					mesh.rotation.y = - 0.5
+					groupVR.add( mesh )
 
-					var signals = editor.signals;
+					var signals = editor.signals
 
 					function updateTexture() {
 
-						mesh.material.map.update();
+						mesh.material.map.update()
 
 					}
 
-					signals.objectSelected.add( updateTexture );
-					signals.objectAdded.add( updateTexture );
-					signals.objectChanged.add( updateTexture );
-					signals.objectRemoved.add( updateTexture );
-					signals.sceneGraphChanged.add( updateTexture );
-					signals.historyChanged.add( updateTexture );
-
+					signals.objectSelected.add( updateTexture )
+					signals.objectAdded.add( updateTexture )
+					signals.objectChanged.add( updateTexture )
+					signals.objectRemoved.add( updateTexture )
+					signals.sceneGraphChanged.add( updateTexture )
+					signals.historyChanged.add( updateTexture )
+					
 				}
 
-				groupVR.visible = true;
+				groupVR.visible = true
 
-			} );
+			} )
 
 			editor.signals.exitedVR.add( function () {
 
-				if ( groupVR !== undefined ) groupVR.visible = false;
+				if ( groupVR !== undefined ) groupVR.visible = false
 
-			} );
+			} )
 			
 		</script>
 		

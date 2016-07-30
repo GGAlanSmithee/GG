@@ -1,4 +1,4 @@
-export const Components = [ 'transform', 'velocity' ];
+export const Components = [ 'transform', 'velocity' ]
 
 export default (entities, delta) => {
     for (const {entity} of entities) {

@@ -1,7 +1,6 @@
 import GG from 'gg'
 
 import velocity from '/home/ubuntu/workspace/editor/app/src/components/velocity.json'
-import weapon from '/home/ubuntu/workspace/editor/app/src/components/weapon.json'
 
 import movement, { Components as movementComponents } from '/home/ubuntu/workspace/editor/app/src/systems/logic/movement.js'
 
@@ -14,7 +13,6 @@ export default () => {
     gg.setEntityData(entityData)
     
     gg.entityManager.registerComponent('velocity', velocity)
-    gg.entityManager.registerComponent('weapon', weapon)
 
 
 

@@ -102,8 +102,6 @@ export default class GG {
 		                        return
 		                    }
 		                    
-		                    console.log('setting', key, 'to', data[key])
-		                    
 		                    this[key] = data[key]
 		                }, this)
 		            })
