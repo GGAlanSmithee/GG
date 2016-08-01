@@ -24,11 +24,11 @@ export default () => {
     
 ${fs.readdirSync(`${url}/${comp}`).map(name => `    gg.entityManager.registerComponent('${stripName(name)}', ${stripName(name)})`).join('\n')}
 
-${fs.readdirSync(`${url}/${sys}/init`).map(name => `    gg.entityManager.registerInitSystem('${stripName(name)}', ${stripName(name)}Components, ${stripName(name)})`).join('\n')}
+${fs.readdirSync(`${url}/${sys}/init`).map(name => `    gg.entityManager.registerInitSystem(${stripName(name)}Components, ${stripName(name)})`).join('\n')}
 
-${fs.readdirSync(`${url}/${sys}/logic`).map(name => `    gg.entityManager.registerLogicSystem('${stripName(name)}', ${stripName(name)}Components, ${stripName(name)})`).join('\n')}
+${fs.readdirSync(`${url}/${sys}/logic`).map(name => `    gg.entityManager.registerLogicSystem(${stripName(name)}Components, ${stripName(name)})`).join('\n')}
 
-${fs.readdirSync(`${url}/${sys}/render`).map(name => `    gg.entityManager.registerRenderSystem('${stripName(name)}', ${stripName(name)}Components, ${stripName(name)})`).join('\n')}
+${fs.readdirSync(`${url}/${sys}/render`).map(name => `    gg.entityManager.registerRenderSystem(${stripName(name)}Components, ${stripName(name)})`).join('\n')}
 
     return gg
 }
