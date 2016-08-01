@@ -20,7 +20,7 @@ rollup.rollup({
             include: 'node_modules/**'
         }),
         nodeResolve({
-            jsnext: false,
+            jsnext: true,
             main: true,
             skip: 'node_modules/three/three.js',
             extensions: [ '.js', '.json' ]

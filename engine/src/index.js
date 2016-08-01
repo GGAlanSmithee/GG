@@ -8,10 +8,6 @@ const COMPONENT = {
     APPEARANCE: 'appearance'
 }
 
-const SYSTEM = {
-    RENDER: 'render'
-}
-
 export default class GG {
     constructor() {
     	// width and height set to 500 just to have it as in the editor for the time being
@@ -69,7 +65,7 @@ export default class GG {
             }
         }
         
-        this.entityManager.registerRenderSystem(SYSTEM.RENDER, renderComponents, render)
+        this.entityManager.registerRenderSystem(renderComponents, render)
     }
     
     initEntities(parsedScene) {

@@ -1,4 +1,4 @@
-import EntityManager         from 'gg-entities'
+import {EntityManager}       from 'gg-entities'
 import MainLoopLoopManager   from '../logic/mainloop-loop-manager'
 // import FetchFileLoader       from '../logic/fetch-file-loader'
 import ThreeObjectMeshLoader from '../logic/three-object-mesh-loader'
