@@ -21,15 +21,13 @@ const appConfig = {
         publicPath: '/',
         sourcePrefix: '  ',
         path: path.join(__dirname, 'public'),
-        filename: 'bundle.js',
-        // library: 'GGFactory',
-        // libraryTarget: 'umd'
+        filename: 'bundle.js'
     },
     externals: {
         'three': 'THREE',
         'gg': 'GG'
     },
-    devtool: 'cheap-module-eval-source-map',
+    devtool: 'source-map',
     plugins: [
         new webpack.optimize.OccurenceOrderPlugin(),
         new webpack.DefinePlugin(GLOBALS),

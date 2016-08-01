@@ -16,7 +16,7 @@ export default () => {
 
 
 
-    gg.entityManager.registerLogicSystem('movement', movementComponents, movement)
+    gg.entityManager.registerLogicSystem(movementComponents, movement)
 
 
 
