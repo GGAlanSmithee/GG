@@ -1,12 +1,12 @@
-var prependFile = require('prepend-file');
-var rollup      = require('rollup');
-var babel       = require('rollup-plugin-babel');
-var npm         = require('rollup-plugin-npm');
-var commonjs    = require('rollup-plugin-commonjs');
-var json        = require('rollup-plugin-json');
+const prependFile = require('prepend-file')
+const rollup      = require('rollup')
+const babel       = require('rollup-plugin-babel')
+const npm         = require('rollup-plugin-npm')
+const commonjs    = require('rollup-plugin-commonjs')
+const json        = require('rollup-plugin-json')
     
 module.exports.run = function(output, platform) {
-    console.log('building...');
+    console.log('building...')
     
     rollup.rollup({
         entry: output,
@@ -36,22 +36,22 @@ module.exports.run = function(output, platform) {
             globals: {
                 three: 'THREE'
             }
-        });
+        })
     })
     .then(() => {
-        console.log('build complete!');
+        console.log('build complete!')
         
         if (platform === 'node') {
             prependFile(output, `require('babel-polyfill');\n\n`, err => {
                 if (err) {
-                    console.warn('could not add babel polyfill.');
+                    console.warn('could not add babel polyfill.')
             
-                    return;
+                    return
                 }
 
-                console.log('added babel polyfill [--platform=node]');
-            });
+                console.log('added babel polyfill [--platform=node]')
+            })
         }
     })
-    .catch(err => console.log(err));
-};
+    .catch(err => console.log(err))
+}
