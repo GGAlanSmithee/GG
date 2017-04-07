@@ -8,7 +8,7 @@ module.exports = function(platform, url, comp, sys, ent) {
     // todo: require dependency injection from gg as a npm package when released
     // import DI from 'gg/src/DI/${platform}'
     return (
-`import GG from 'gg'
+`import {GG, EntityManager} from 'gg'
 
 ${fs.readdirSync(`${url}/${comp}`).map(name => `import ${stripName(name)} from '${process.cwd()}/${url}/${comp}/${name}'`).join('\n')}
 ${fs.readdirSync(`${url}/${sys}/init`).map(name => `import ${stripName(name)}, { Components as ${stripName(name)}Components } from '${process.cwd()}/${url}/${sys}/init/${name}'`).join('\n')}
@@ -17,7 +17,7 @@ ${fs.readdirSync(`${url}/${sys}/render`).map(name => `import ${stripName(name)},
 
 import entityData from '${process.cwd()}/${url}/entities.json'
 
-export default () => {
+export const create = () => {
     const gg = new GG()
     
     gg.setEntityData(entityData)
@@ -31,7 +31,6 @@ ${fs.readdirSync(`${url}/${sys}/logic`).map(name => `    gg.entityManager.regist
 ${fs.readdirSync(`${url}/${sys}/render`).map(name => `    gg.entityManager.registerRenderSystem(${stripName(name)}Components, ${stripName(name)})`).join('\n')}
 
     return gg
-}
-`
+}`
     )
 }
