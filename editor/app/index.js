@@ -1,8 +1,9 @@
 /*global UI*/
-import Create from './src'
+import {create} from './src'
 
 let startPlayer = null
 let stopPlayer = null
+const player = create()
 
 const Player = function( editor ) {
 	const signals = editor.signals
@@ -11,8 +12,6 @@ const Player = function( editor ) {
 	container.setId('player')
 	container.setPosition('absolute')
 	container.setDisplay('none')
-
-	const player = Create()
 
 	window.addEventListener('resize', () => {
 		player.setSize(container.dom.clientWidth, container.dom.clientHeight)
@@ -53,5 +52,14 @@ if (module.hot) {
     	
     	signals.startPlayer.remove(startPlayer)
     	signals.stopPlayer.remove(stopPlayer)
+    
+        //todo move to new "reset" function of GG engine
+        player.entityManager.componentManager.init()
+        player.entityManager.systemManager.init()
+        player.entityManager.entityFactory.init()
+        player.entityManager.eventHandler.init()
+        player.entityManager.init(player.entityManager.capacity)
+        
+        player.entityData = null
     })
 }
