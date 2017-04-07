@@ -22,12 +22,10 @@ rollup.rollup({
         nodeResolve({
             jsnext: true,
             main: true,
-            skip: 'node_modules/three/three.js',
             extensions: [ '.js', '.json' ]
         })
     ]
 }).then((bundle) => {
-    
     const config = {
         globals: {
             three: 'THREE'
