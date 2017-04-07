@@ -17,7 +17,7 @@ module.exports.run = function() {
           .option('-o, --output <file>', 'The output filename.')
           .option('-d, --directory <path>', 'The directory of the app.', '.')
           .option('-p, --platform <name>', 'The output platform [ browser or node ].', 'browser')
-          .parse(process.argv);
+          .parse(process.argv)
 
     config    = program.config ? Object.assign({}, defaultConfig, require(`${process.cwd()}/${program.config}`)) : defaultConfig
     output    = program.output
