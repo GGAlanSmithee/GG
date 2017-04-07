@@ -8,7 +8,7 @@ const COMPONENT = {
     APPEARANCE: 'appearance'
 }
 
-export default class GG {
+export class GG {
     constructor() {
     	// width and height set to 500 just to have it as in the editor for the time being
     	this.width  = 500
